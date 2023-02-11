@@ -1,0 +1,1403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>Java日常开发的21个坑</title>
+    <url>/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近看了极客时间的《Java业务开发常见错误100例》，再结合平时踩的一些代码坑，写写总结，希望对大家有帮助，感谢阅读~</p>
+<h3 id="1-六类典型空指针问题"><a href="#1-六类典型空指针问题" class="headerlink" title="1. 六类典型空指针问题"></a>1. 六类典型空指针问题</h3><ul>
+<li>包装类型的空指针问题</li>
+<li>级联调用的空指针问题</li>
+<li>Equals方法左边的空指针问题</li>
+<li>ConcurrentHashMap 这样的容器不支持 Key 和 Value 为 null。</li>
+<li>集合，数组直接获取元素</li>
+<li>对象直接获取属性</li>
+</ul>
+<span id="more"></span>
+
+<h4 id="1-1包装类型的空指针问题"><a href="#1-1包装类型的空指针问题" class="headerlink" title="1.1包装类型的空指针问题"></a>1.1包装类型的空指针问题</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class NullPointTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        System.out.println(testInteger(null));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static Integer testInteger(Integer i) &#123;</span><br><span class="line">        return i + 1;  //包装类型，传参可能为null，直接计算，则会导致空指针问题</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-2-级联调用的空指针问题"><a href="#1-2-级联调用的空指针问题" class="headerlink" title="1.2 级联调用的空指针问题"></a>1.2 级联调用的空指针问题</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class NullPointTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">       //fruitService.getAppleService() 可能为空，会导致空指针问题</span><br><span class="line">        fruitService.getAppleService().getWeight().equals(&quot;OK&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="1-3-Equals方法左边的空指针问题"><a href="#1-3-Equals方法左边的空指针问题" class="headerlink" title="1.3 Equals方法左边的空指针问题"></a>1.3 Equals方法左边的空指针问题</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class NullPointTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String s = null;</span><br><span class="line">        if (s.equals(&quot;666&quot;)) &#123; //s可能为空，会导致空指针问题</span><br><span class="line">            System.out.println(&quot;公众号：捡田螺的小男孩，666&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-4-ConcurrentHashMap-这样的容器不支持-Key，Value-为-null。"><a href="#1-4-ConcurrentHashMap-这样的容器不支持-Key，Value-为-null。" class="headerlink" title="1.4 ConcurrentHashMap 这样的容器不支持 Key，Value 为 null。"></a>1.4 ConcurrentHashMap 这样的容器不支持 Key，Value 为 null。</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class NullPointTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Map map = new ConcurrentHashMap&lt;&gt;();</span><br><span class="line">        String key = null;</span><br><span class="line">        String value = null;</span><br><span class="line">        map.put(key, value);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-5-集合，数组直接获取元素"><a href="#1-5-集合，数组直接获取元素" class="headerlink" title="1.5  集合，数组直接获取元素"></a>1.5  集合，数组直接获取元素</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class NullPointTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int [] array=null;</span><br><span class="line">        List list = null;</span><br><span class="line">        System.out.println(array[0]); //空指针异常</span><br><span class="line">        System.out.println(list.get(0)); //空指针一场</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-6-对象直接获取属性"><a href="#1-6-对象直接获取属性" class="headerlink" title="1.6 对象直接获取属性"></a>1.6 对象直接获取属性</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class NullPointTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        User user=null;</span><br><span class="line">        System.out.println(user.getAge()); //空指针异常</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-日期YYYY格式设置的坑"><a href="#2-日期YYYY格式设置的坑" class="headerlink" title="2. 日期YYYY格式设置的坑"></a>2. 日期YYYY格式设置的坑</h3><p>日常开发，经常需要对日期格式化，但是呢，年份设置为YYYY大写的时候，是有坑的哦。</p>
+<p>反例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line">calendar.set(2019, Calendar.DECEMBER, 31);</span><br><span class="line"></span><br><span class="line">Date testDate = calendar.getTime();</span><br><span class="line"></span><br><span class="line">SimpleDateFormat dtf = new SimpleDateFormat(&quot;YYYY-MM-dd&quot;);</span><br><span class="line">System.out.println(&quot;2019-12-31 转 YYYY-MM-dd 格式后 &quot; + dtf.format(testDate));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2019-12-31 转 YYYY-MM-dd 格式后 2020-12-31</span><br></pre></td></tr></table></figure>
+
+<p><strong>解析：</strong></p>
+<p>为什么明明是2019年12月31号，就转了一下格式，就变成了2020年12月31号了？因为YYYY是基于周来计算年的，它指向当天所在周属于的年份，一周从周日开始算起，周六结束，只要本周跨年，那么这一周就算下一年的了。正确姿势是使用yyyy格式。</p>
+<img src="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/2.png" class="lazyload placeholder" data-srcset="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/2.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+
+<p>正例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Calendar calendar = Calendar.getInstance();</span><br><span class="line">calendar.set(2019, Calendar.DECEMBER, 31);</span><br><span class="line"></span><br><span class="line">Date testDate = calendar.getTime();</span><br><span class="line"></span><br><span class="line">SimpleDateFormat dtf = new SimpleDateFormat(&quot;yyyy-MM-dd&quot;);</span><br><span class="line">System.out.println(&quot;2019-12-31 转 yyyy-MM-dd 格式后 &quot; + dtf.format(testDate));</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-金额数值计算精度的坑"><a href="#3-金额数值计算精度的坑" class="headerlink" title="3.金额数值计算精度的坑"></a>3.金额数值计算精度的坑</h3><p>看下这个浮点数计算的例子吧：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class DoubleTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        System.out.println(0.1+0.2);</span><br><span class="line">        System.out.println(1.0-0.8);</span><br><span class="line">        System.out.println(4.015*100);</span><br><span class="line">        System.out.println(123.3/100);</span><br><span class="line"></span><br><span class="line">        double amount1 = 3.15;</span><br><span class="line">        double amount2 = 2.10;</span><br><span class="line">        if (amount1 - amount2 == 1.05)&#123;</span><br><span class="line">            System.out.println(&quot;OK&quot;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">0.30000000000000004</span><br><span class="line">0.19999999999999996</span><br><span class="line">401.49999999999994</span><br><span class="line">1.2329999999999999</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，结算结果跟我们预期不一致，其实是因为计算机是以二进制存储数值的，对于浮点数也是。对于计算机而言，0.1无法精确表达，这就是为什么浮点数会导致精确度缺失的。因此，<strong>金额计算，一般都是用BigDecimal 类型</strong></p>
+<p>对于以上例子，我们改为BigDecimal，再看看运行效果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">System.out.println(new BigDecimal(0.1).add(new BigDecimal(0.2)));</span><br><span class="line">System.out.println(new BigDecimal(1.0).subtract(new BigDecimal(0.8)));</span><br><span class="line">System.out.println(new BigDecimal(4.015).multiply(new BigDecimal(100)));</span><br><span class="line">System.out.println(new BigDecimal(123.3).divide(new BigDecimal(100)));</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">0.3000000000000000166533453693773481063544750213623046875</span><br><span class="line">0.1999999999999999555910790149937383830547332763671875</span><br><span class="line">401.49999999999996802557689079549163579940795898437500</span><br><span class="line">1.232999999999999971578290569595992565155029296875</span><br></pre></td></tr></table></figure>
+
+<p>发现结果还是不对，<strong>其实</strong>，使用 BigDecimal 表示和计算浮点数，必须使用<strong>字符串的构造方法</strong>来初始化 BigDecimal，正例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class DoubleTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        System.out.println(new BigDecimal(&quot;0.1&quot;).add(new BigDecimal(&quot;0.2&quot;)));</span><br><span class="line">        System.out.println(new BigDecimal(&quot;1.0&quot;).subtract(new BigDecimal(&quot;0.8&quot;)));</span><br><span class="line">        System.out.println(new BigDecimal(&quot;4.015&quot;).multiply(new BigDecimal(&quot;100&quot;)));</span><br><span class="line">        System.out.println(new BigDecimal(&quot;123.3&quot;).divide(new BigDecimal(&quot;100&quot;)));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在进行金额计算，使用BigDecimal的时候，我们还需要<strong>注意BigDecimal的几位小数点，还有它的八种舍入模式哈</strong>。</p>
+<h3 id="4-FileReader默认编码导致乱码问题"><a href="#4-FileReader默认编码导致乱码问题" class="headerlink" title="4. FileReader默认编码导致乱码问题"></a>4. FileReader默认编码导致乱码问题</h3><p>看下这个例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class FileReaderTest &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        Files.deleteIfExists(Paths.get(&quot;jay.txt&quot;));</span><br><span class="line">        Files.write(Paths.get(&quot;jay.txt&quot;), &quot;你好,捡田螺的小男孩&quot;.getBytes(Charset.forName(&quot;GBK&quot;)));</span><br><span class="line">        System.out.println(&quot;系统默认编码：&quot;+Charset.defaultCharset());</span><br><span class="line"></span><br><span class="line">        char[] chars = new char[10];</span><br><span class="line">        String content = &quot;&quot;;</span><br><span class="line">        try (FileReader fileReader = new FileReader(&quot;jay.txt&quot;)) &#123;</span><br><span class="line">            int count;</span><br><span class="line">            while ((count = fileReader.read(chars)) != -1) &#123;</span><br><span class="line">                content += new String(chars, 0, count);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(content);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">系统默认编码：UTF-8</span><br><span class="line">���,�����ݵ�С�к�</span><br></pre></td></tr></table></figure>
+<p>从运行结果，可以知道，系统默认编码是utf8，demo中读取出来，出现乱码了。为什么呢？</p>
+<blockquote>
+<p>FileReader 是以当<strong>前机器的默认字符集</strong>来读取文件的，如果希望指定字符集的话，需要直接使用 InputStreamReader 和 FileInputStream。</p>
+</blockquote>
+<p>正例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class FileReaderTest &#123;</span><br><span class="line">    public static void main(String[] args) throws IOException &#123;</span><br><span class="line"></span><br><span class="line">        Files.deleteIfExists(Paths.get(&quot;jay.txt&quot;));</span><br><span class="line">        Files.write(Paths.get(&quot;jay.txt&quot;), &quot;你好,捡田螺的小男孩&quot;.getBytes(Charset.forName(&quot;GBK&quot;)));</span><br><span class="line">        System.out.println(&quot;系统默认编码：&quot;+Charset.defaultCharset());</span><br><span class="line"></span><br><span class="line">        char[] chars = new char[10];</span><br><span class="line">        String content = &quot;&quot;;</span><br><span class="line">        try (FileInputStream fileInputStream = new FileInputStream(&quot;jay.txt&quot;);</span><br><span class="line">             InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream, Charset.forName(&quot;GBK&quot;))) &#123;</span><br><span class="line">            int count;</span><br><span class="line">            while ((count = inputStreamReader.read(chars)) != -1) &#123;</span><br><span class="line">                content += new String(chars, 0, count);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(content);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5-Integer缓存的坑"><a href="#5-Integer缓存的坑" class="headerlink" title="5. Integer缓存的坑"></a>5. Integer缓存的坑</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class IntegerTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        Integer a = 127;</span><br><span class="line">        Integer b = 127;</span><br><span class="line">        System.out.println(&quot;a==b:&quot;+ (a == b));</span><br><span class="line">        </span><br><span class="line">        Integer c = 128;</span><br><span class="line">        Integer d = 128;</span><br><span class="line">        System.out.println(&quot;c==d:&quot;+ (c == d));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">a==b:true</span><br><span class="line">c==d:false</span><br></pre></td></tr></table></figure>
+
+<p>为什么Integer值如果是128就不相等了呢？<strong>编译器会把 Integer a &#x3D; 127 转换为 Integer.valueOf(127)。</strong> 我们看下源码。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static Integer valueOf(int i) &#123;</span><br><span class="line">      if (i &gt;= IntegerCache.low &amp;&amp; i &lt;= IntegerCache.high)</span><br><span class="line">          return IntegerCache.cache[i + (-IntegerCache.low)];</span><br><span class="line">      return new Integer(i);</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>可以发现，i在一定范围内，是会返回缓存的。</p>
+<blockquote>
+<p>默认情况下呢，这个缓存区间就是[-128, 127]，所以我们业务日常开发中，如果涉及Integer值的比较，需要注意这个坑哈。还有呢，设置 JVM 参数加上 -XX:AutoBoxCacheMax&#x3D;1000，是可以调整这个区间参数的，大家可以自己试一下哈</p>
+</blockquote>
+<h3 id="6-static静态变量依赖spring实例化变量，可能导致初始化出错"><a href="#6-static静态变量依赖spring实例化变量，可能导致初始化出错" class="headerlink" title="6. static静态变量依赖spring实例化变量，可能导致初始化出错"></a>6. static静态变量依赖spring实例化变量，可能导致初始化出错</h3><p>之前看到过类似的代码。静态变量依赖于spring容器的bean。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private static SmsService smsService = SpringContextUtils.getBean(SmsService.class);</span><br></pre></td></tr></table></figure>
+<p>这个静态的smsService有可能获取不到的，因为类加载顺序不是确定的，正确的写法可以这样，如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private static SmsService  smsService =null;</span><br><span class="line"></span><br><span class="line">//使用到的时候采取获取</span><br><span class="line">public static SmsService getSmsService()&#123;</span><br><span class="line">  if(smsService==null)&#123;</span><br><span class="line">     smsService = SpringContextUtils.getBean(SmsService.class);</span><br><span class="line">  &#125;</span><br><span class="line">  return smsService;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7-使用ThreadLocal，线程重用导致信息错乱的坑"><a href="#7-使用ThreadLocal，线程重用导致信息错乱的坑" class="headerlink" title="7. 使用ThreadLocal，线程重用导致信息错乱的坑"></a>7. 使用ThreadLocal，线程重用导致信息错乱的坑</h3><p>使用ThreadLocal缓存信息，有可能出现信息错乱的情况。看下下面这个例子吧。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private static final ThreadLocal&lt;Integer&gt; currentUser = ThreadLocal.withInitial(() -&gt; null);</span><br><span class="line"></span><br><span class="line">@GetMapping(&quot;wrong&quot;)</span><br><span class="line">public Map wrong(@RequestParam(&quot;userId&quot;) Integer userId) &#123;</span><br><span class="line">    //设置用户信息之前先查询一次ThreadLocal中的用户信息</span><br><span class="line">    String before  = Thread.currentThread().getName() + &quot;:&quot; + currentUser.get();</span><br><span class="line">    //设置用户信息到ThreadLocal</span><br><span class="line">    currentUser.set(userId);</span><br><span class="line">    //设置用户信息之后再查询一次ThreadLocal中的用户信息</span><br><span class="line">    String after  = Thread.currentThread().getName() + &quot;:&quot; + currentUser.get();</span><br><span class="line">    //汇总输出两次查询结果</span><br><span class="line">    Map result = new HashMap();</span><br><span class="line">    result.put(&quot;before&quot;, before);</span><br><span class="line">    result.put(&quot;after&quot;, after);</span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>按理说，每次获取的before应该都是null，但是呢，程序运行在 Tomcat 中，执行程序的线程是 Tomcat 的工作线程，而 Tomcat 的工作线程是基于线程池的。</p>
+<blockquote>
+<p>线程池会重用固定的几个线程，一旦线程重用，那么很可能首次从 ThreadLocal 获取的值是之前其他用户的请求遗留的值。这时，ThreadLocal 中的用户信息就是其他用户的信息。</p>
+</blockquote>
+<p>把tomcat的工作线程设置为1</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">server.tomcat.max-threads=1</span><br></pre></td></tr></table></figure>
+
+<p>用户1，请求过来，会有以下结果，符合预期：</p>
+<img src="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/7-1.png" class="lazyload placeholder" data-srcset="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/7-1.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+
+<p>用户2请求过来，会有以下结果，<strong>不符合预期</strong>：</p>
+<img src="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/7-2.png" class="lazyload placeholder" data-srcset="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/7-2.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+<p>因此，使用类似 ThreadLocal 工具来存放一些数据时，需要特别注意在代码运行完后，显式地去清空设置的数据，正例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@GetMapping(&quot;right&quot;)</span><br><span class="line">public Map right(@RequestParam(&quot;userId&quot;) Integer userId) &#123;</span><br><span class="line">    String before  = Thread.currentThread().getName() + &quot;:&quot; + currentUser.get();</span><br><span class="line">    currentUser.set(userId);</span><br><span class="line">    try &#123;</span><br><span class="line">        String after = Thread.currentThread().getName() + &quot;:&quot; + currentUser.get();</span><br><span class="line">        Map result = new HashMap();</span><br><span class="line">        result.put(&quot;before&quot;, before);</span><br><span class="line">        result.put(&quot;after&quot;, after);</span><br><span class="line">        return result;</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        //在finally代码块中删除ThreadLocal中的数据，确保数据不串</span><br><span class="line">        currentUser.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="8-疏忽switch的return和break"><a href="#8-疏忽switch的return和break" class="headerlink" title="8. 疏忽switch的return和break"></a>8. 疏忽switch的return和break</h3><p>这一点严格来说，应该不算坑，但是呢，大家写代码的时候，有些朋友容易疏忽了。直接看例子吧</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/*</span><br><span class="line"> * 关注公众号：</span><br><span class="line"> * 捡田螺的小男孩</span><br><span class="line"> */</span><br><span class="line">public class SwitchTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws InterruptedException &#123;</span><br><span class="line">        System.out.println(&quot;testSwitch结果是：&quot;+testSwitch(&quot;1&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private static String testSwitch(String key) &#123;</span><br><span class="line">        switch (key) &#123;</span><br><span class="line">            case &quot;1&quot;:</span><br><span class="line">                System.out.println(&quot;1&quot;);</span><br><span class="line">            case &quot;2&quot;:</span><br><span class="line">                System.out.println(2);</span><br><span class="line">                return &quot;2&quot;;</span><br><span class="line">            case &quot;3&quot;:</span><br><span class="line">                System.out.println(&quot;3&quot;);</span><br><span class="line">            default:</span><br><span class="line">                System.out.println(&quot;返回默认值&quot;);</span><br><span class="line">                return &quot;4&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">测试switch</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">testSwitch结果是：2</span><br></pre></td></tr></table></figure>
+<p>switch 是会<strong>沿着case一直往下匹配的，知道遇到return或者break。</strong> 所以，在写代码的时候留意一下，是不是你要的结果。</p>
+<h3 id="9-Arrays-asList的几个坑"><a href="#9-Arrays-asList的几个坑" class="headerlink" title="9. Arrays.asList的几个坑"></a>9. Arrays.asList的几个坑</h3><h4 id="9-1-基本类型不能作为-Arrays-asList方法的参数，否则会被当做一个参数。"><a href="#9-1-基本类型不能作为-Arrays-asList方法的参数，否则会被当做一个参数。" class="headerlink" title="9.1 基本类型不能作为 Arrays.asList方法的参数，否则会被当做一个参数。"></a>9.1 基本类型不能作为 Arrays.asList方法的参数，否则会被当做一个参数。</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ArrayAsListTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        int[] array = &#123;1, 2, 3&#125;;</span><br><span class="line">        List list = Arrays.asList(array);</span><br><span class="line">        System.out.println(list.size());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1</span><br></pre></td></tr></table></figure>
+<p> Arrays.asList源码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static &lt;T&gt; List&lt;T&gt; asList(T... a) &#123;</span><br><span class="line">    return new ArrayList&lt;&gt;(a);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="9-2-Arrays-asList-返回的-List-不支持增删操作。"><a href="#9-2-Arrays-asList-返回的-List-不支持增删操作。" class="headerlink" title="9.2 Arrays.asList 返回的 List 不支持增删操作。"></a>9.2 Arrays.asList 返回的 List 不支持增删操作。</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ArrayAsListTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String[] array = &#123;&quot;1&quot;, &quot;2&quot;, &quot;3&quot;&#125;;</span><br><span class="line">        List list = Arrays.asList(array);</span><br><span class="line">        list.add(&quot;5&quot;);</span><br><span class="line">        System.out.println(list.size());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.UnsupportedOperationException</span><br><span class="line">	at java.util.AbstractList.add(AbstractList.java:148)</span><br><span class="line">	at java.util.AbstractList.add(AbstractList.java:108)</span><br><span class="line">	at object.ArrayAsListTest.main(ArrayAsListTest.java:11)</span><br></pre></td></tr></table></figure>
+
+<p>Arrays.asList 返回的 List 并不是我们期望的 java.util.ArrayList，而是 Arrays 的内部类 ArrayList。内部类的ArrayList没有实现add方法，而是父类的add方法的实现，是会抛出异常的呢。</p>
+<h4 id="9-3-使用Arrays-asLis的时候，对原始数组的修改会影响到我们获得的那个List"><a href="#9-3-使用Arrays-asLis的时候，对原始数组的修改会影响到我们获得的那个List" class="headerlink" title="9.3 使用Arrays.asLis的时候，对原始数组的修改会影响到我们获得的那个List"></a>9.3 使用Arrays.asLis的时候，对原始数组的修改会影响到我们获得的那个List</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ArrayAsListTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        String[] arr = &#123;&quot;1&quot;, &quot;2&quot;, &quot;3&quot;&#125;;</span><br><span class="line">        List list = Arrays.asList(arr);</span><br><span class="line">        arr[1] = &quot;4&quot;;</span><br><span class="line">        System.out.println(&quot;原始数组&quot;+Arrays.toString(arr));</span><br><span class="line">        System.out.println(&quot;list数组&quot; + list);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">原始数组[1, 4, 3]</span><br><span class="line">list数组[1, 4, 3]</span><br></pre></td></tr></table></figure>
+<p>从运行结果可以看到，原数组改变，Arrays.asList转化来的list也跟着改变啦，大家使用的时候要注意一下哦，可以用new ArrayList(Arrays.asList(arr))包一下的。</p>
+<h3 id="10-ArrayList-toArray-强转的坑"><a href="#10-ArrayList-toArray-强转的坑" class="headerlink" title="10. ArrayList.toArray() 强转的坑"></a>10. ArrayList.toArray() 强转的坑</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ArrayListTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        List&lt;String&gt; list = new ArrayList&lt;String&gt;(1);</span><br><span class="line">        list.add(&quot;公众号：捡田螺的小男孩&quot;);</span><br><span class="line">        String[] array21 = (String[])list.toArray();//类型转换异常</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为返回的是Object类型，Object类型数组强转String数组，会发生ClassCastException。解决方案是，使用toArray()重载方法toArray(T[] a)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">String[] array1 = list.toArray(new String[0]);//可以正常运行</span><br></pre></td></tr></table></figure>
+
+<h3 id="11-异常使用的几个坑"><a href="#11-异常使用的几个坑" class="headerlink" title="11. 异常使用的几个坑"></a>11. 异常使用的几个坑</h3><h4 id="11-1-不要弄丢了你的堆栈异常信息"><a href="#11-1-不要弄丢了你的堆栈异常信息" class="headerlink" title="11.1 不要弄丢了你的堆栈异常信息"></a>11.1 不要弄丢了你的堆栈异常信息</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void wrong1()&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        readFile();</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        //没有把异常e取出来，原始异常信息丢失  </span><br><span class="line">        throw new RuntimeException(&quot;系统忙请稍后再试&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public void wrong2()&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        readFile();</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        //只保留了异常消息，栈没有记录啦</span><br><span class="line">        log.error(&quot;文件读取错误, &#123;&#125;&quot;, e.getMessage());</span><br><span class="line">        throw new RuntimeException(&quot;系统忙请稍后再试&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>正确的打印方式，应该酱紫</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void right()&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        readFile();</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">        //把整个IO异常都记录下来，而不是只打印消息</span><br><span class="line">        log.error(&quot;文件读取错误&quot;, e);</span><br><span class="line">        throw new RuntimeException(&quot;系统忙请稍后再试&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="11-2-不要把异常定义为静态变量"><a href="#11-2-不要把异常定义为静态变量" class="headerlink" title="11.2 不要把异常定义为静态变量"></a>11.2 不要把异常定义为静态变量</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void testStaticExeceptionOne&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        exceptionOne();</span><br><span class="line">    &#125; catch (Exception ex) &#123;</span><br><span class="line">        log.error(&quot;exception one error&quot;, ex);</span><br><span class="line">    &#125;</span><br><span class="line">    try &#123;</span><br><span class="line">        exceptionTwo();</span><br><span class="line">    &#125; catch (Exception ex) &#123;</span><br><span class="line">        log.error(&quot;exception two error&quot;, ex);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void exceptionOne() &#123;</span><br><span class="line">    //这里有问题</span><br><span class="line">    throw Exceptions.ONEORTWO;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">private void exceptionTwo() &#123;</span><br><span class="line">    //这里有问题</span><br><span class="line">    throw Exceptions.ONEORTWO;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>exceptionTwo抛出的异常，很可能是 exceptionOne的异常哦。正确使用方法，应该是new 一个出来。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">private void exceptionTwo() &#123;</span><br><span class="line">    throw new BusinessException(&quot;业务异常&quot;, 0001);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h4 id="11-3-生产环境不要使用e-printStackTrace"><a href="#11-3-生产环境不要使用e-printStackTrace" class="headerlink" title="11.3 生产环境不要使用e.printStackTrace();"></a>11.3 生产环境不要使用e.printStackTrace();</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void wrong()&#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        readFile();</span><br><span class="line">    &#125; catch (IOException e) &#123;</span><br><span class="line">       //生产环境别用它</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为它占用太多内存，造成锁死，并且，日志交错混合，也不易读。正确使用如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">log.error(&quot;异常日志正常打印方式&quot;,e);</span><br></pre></td></tr></table></figure>
+
+<h4 id="11-4-线程池提交过程中，出现异常怎么办？"><a href="#11-4-线程池提交过程中，出现异常怎么办？" class="headerlink" title="11.4 线程池提交过程中，出现异常怎么办？"></a>11.4 线程池提交过程中，出现异常怎么办？</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class ThreadExceptionTest &#123;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        ExecutorService executorService = Executors.newFixedThreadPool(10);</span><br><span class="line"></span><br><span class="line">        IntStream.rangeClosed(1, 10).forEach(i -&gt; executorService.submit(()-&gt; &#123;</span><br><span class="line">                    if (i == 5) &#123;</span><br><span class="line">                        System.out.println(&quot;发生异常啦&quot;);</span><br><span class="line">                        throw new RuntimeException(&quot;error&quot;);</span><br><span class="line">                    &#125;</span><br><span class="line">                    System.out.println(&quot;当前执行第几:&quot; + Thread.currentThread().getName() );</span><br><span class="line">                &#125;</span><br><span class="line">        ));</span><br><span class="line">        executorService.shutdown();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">当前执行第几:pool-1-thread-1</span><br><span class="line">当前执行第几:pool-1-thread-2</span><br><span class="line">当前执行第几:pool-1-thread-3</span><br><span class="line">当前执行第几:pool-1-thread-4</span><br><span class="line">发生异常啦</span><br><span class="line">当前执行第几:pool-1-thread-6</span><br><span class="line">当前执行第几:pool-1-thread-7</span><br><span class="line">当前执行第几:pool-1-thread-8</span><br><span class="line">当前执行第几:pool-1-thread-9</span><br><span class="line">当前执行第几:pool-1-thread-10</span><br></pre></td></tr></table></figure>
+<p>可以发现，如果是使用submit方法提交到线程池的异步任务，异常会被吞掉的，所以在日常发现中，如果会有可预见的异常，可以采取这几种方案处理：</p>
+<ul>
+<li>1.在任务代码try&#x2F;catch捕获异常</li>
+<li>2.通过Future对象的get方法接收抛出的异常，再处理</li>
+<li>3.为工作者线程设置UncaughtExceptionHandler，在uncaughtException方法中处理异常</li>
+<li>4.重写ThreadPoolExecutor的afterExecute方法，处理传递的异常引用</li>
+</ul>
+<h4 id="11-5-finally重新抛出的异常也要注意啦"><a href="#11-5-finally重新抛出的异常也要注意啦" class="headerlink" title="11.5 finally重新抛出的异常也要注意啦"></a>11.5 finally重新抛出的异常也要注意啦</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void wrong() &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        log.info(&quot;try&quot;);</span><br><span class="line">        //异常丢失</span><br><span class="line">        throw new RuntimeException(&quot;try&quot;);</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        log.info(&quot;finally&quot;);</span><br><span class="line">        throw new RuntimeException(&quot;finally&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个方法是不会出现两个异常的呢，所以finally的异常会把try的<strong>异常覆盖</strong>。正确的使用方式应该是，finally 代码块<strong>负责自己的异常捕获和处理</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public void right() &#123;</span><br><span class="line">    try &#123;</span><br><span class="line">        log.info(&quot;try&quot;);</span><br><span class="line">        throw new RuntimeException(&quot;try&quot;);</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        log.info(&quot;finally&quot;);</span><br><span class="line">        try &#123;</span><br><span class="line">            throw new RuntimeException(&quot;finally&quot;);</span><br><span class="line">        &#125; catch (Exception ex) &#123;</span><br><span class="line">            log.error(&quot;finally&quot;, ex);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="12-JSON序列化-Long类型被转成Integer类型！"><a href="#12-JSON序列化-Long类型被转成Integer类型！" class="headerlink" title="12.JSON序列化,Long类型被转成Integer类型！"></a>12.JSON序列化,Long类型被转成Integer类型！</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class JSONTest &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line"></span><br><span class="line">        Long idValue = 3000L;</span><br><span class="line">        Map&lt;String, Object&gt; data = new HashMap&lt;&gt;(2);</span><br><span class="line">        data.put(&quot;id&quot;, idValue);</span><br><span class="line">        data.put(&quot;name&quot;, &quot;捡田螺的小男孩&quot;);</span><br><span class="line"></span><br><span class="line">        Assert.assertEquals(idValue, (Long) data.get(&quot;id&quot;));</span><br><span class="line">        String jsonString = JSON.toJSONString(data);</span><br><span class="line"></span><br><span class="line">        // 反序列化时Long被转为了Integer</span><br><span class="line">        Map map = JSON.parseObject(jsonString, Map.class);</span><br><span class="line">        Object idObj = map.get(&quot;id&quot;);</span><br><span class="line">        System.out.println(&quot;反序列化的类型是否为Integer：&quot;+(idObj instanceof Integer));</span><br><span class="line">        Assert.assertEquals(idValue, (Long) idObj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>运行结果：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; 反序列化的类型是否为Integer：true</span><br><span class="line">java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.Long</span><br><span class="line">	at object.JSONTest.main(JSONTest.java:24)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>注意啦</strong>，序列化为Json串后，Josn串是没有Long类型呢。而且反序列化回来如果也是Object接收，数字小于Interger最大值的话，给转成Integer啦！</p>
+</blockquote>
+<h3 id="13-使用Executors声明线程池，newFixedThreadPool的OOM问题"><a href="#13-使用Executors声明线程池，newFixedThreadPool的OOM问题" class="headerlink" title="13. 使用Executors声明线程池，newFixedThreadPool的OOM问题"></a>13. 使用Executors声明线程池，newFixedThreadPool的OOM问题</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ExecutorService executor = Executors.newFixedThreadPool(10);</span><br><span class="line">        for (int i = 0; i &lt; Integer.MAX_VALUE; i++) &#123;</span><br><span class="line">            executor.execute(() -&gt; &#123;</span><br><span class="line">                try &#123;</span><br><span class="line">                    Thread.sleep(10000);</span><br><span class="line">                &#125; catch (InterruptedException e) &#123;</span><br><span class="line">                    //do nothing</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>IDE指定JVM参数：-Xmx8m -Xms8m :</strong></p>
+<img src="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/13-1.jpg" class="lazyload placeholder" data-srcset="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/13-1.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+
+<p>运行结果：</p>
+<img src="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/13-2.jpg" class="lazyload placeholder" data-srcset="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/13-2.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+
+<p>我们看下源码，其实newFixedThreadPool使用的是无界队列！</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static ExecutorService newFixedThreadPool(int nThreads) &#123;</span><br><span class="line">    return new ThreadPoolExecutor(nThreads, nThreads,</span><br><span class="line">                                  0L, TimeUnit.MILLISECONDS,</span><br><span class="line">                                  new LinkedBlockingQueue&lt;Runnable&gt;());</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class LinkedBlockingQueue&lt;E&gt; extends AbstractQueue&lt;E&gt;</span><br><span class="line">        implements BlockingQueue&lt;E&gt;, java.io.Serializable &#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Creates a &#123;@code LinkedBlockingQueue&#125; with a capacity of</span><br><span class="line">     * &#123;@link Integer#MAX_VALUE&#125;.</span><br><span class="line">     */</span><br><span class="line">    public LinkedBlockingQueue() &#123;</span><br><span class="line">        this(Integer.MAX_VALUE);</span><br><span class="line">    &#125;</span><br><span class="line">...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>newFixedThreadPool线程池的核心线程数是固定的，它使用了近乎于无界的LinkedBlockingQueue阻塞队列。当核心线程用完后，任务会入队到阻塞队列，如果任务执行的时间比较长，没有释放，会导致越来越多的任务堆积到阻塞队列，最后导致机器的内存使用不停的飙升，造成JVM OOM。</p>
+</blockquote>
+<h3 id="14-直接大文件或者一次性从数据库读取太多数据到内存，可能导致OOM问题"><a href="#14-直接大文件或者一次性从数据库读取太多数据到内存，可能导致OOM问题" class="headerlink" title="14. 直接大文件或者一次性从数据库读取太多数据到内存，可能导致OOM问题"></a>14. 直接大文件或者一次性从数据库读取太多数据到内存，可能导致OOM问题</h3><p>如果一次性把大文件或者数据库太多数据达到内存，是会导致OOM的。所以，为什么查询DB数据库，一般都建议分批。</p>
+<p>读取文件的话，一般问文件不会太大，才使用<code>Files.readAllLines()</code>。为什么呢？因为它是直接把文件都读到内存的，预估下不会OOM才使用这个吧，可以看下它的源码：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public static List&lt;String&gt; readAllLines(Path path, Charset cs) throws IOException &#123;</span><br><span class="line">    try (BufferedReader reader = newBufferedReader(path, cs)) &#123;</span><br><span class="line">        List&lt;String&gt; result = new ArrayList&lt;&gt;();</span><br><span class="line">        for (;;) &#123;</span><br><span class="line">            String line = reader.readLine();</span><br><span class="line">            if (line == null)</span><br><span class="line">                break;</span><br><span class="line">            result.add(line);</span><br><span class="line">        &#125;</span><br><span class="line">        return result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果是太大的文件，可以使用Files.line()按需读取，当时读取文件这些，一般是使用完需要<strong>关闭资源流</strong>的哈</p>
+<h3 id="15-先查询，再更新-x2F-删除的并发一致性问题"><a href="#15-先查询，再更新-x2F-删除的并发一致性问题" class="headerlink" title="15. 先查询，再更新&#x2F;删除的并发一致性问题"></a>15. 先查询，再更新&#x2F;删除的并发一致性问题</h3><p>再日常开发中，这种代码实现经常可见：先查询是否有剩余可用的票，再去更新票余量。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if(selectIsAvailable(ticketId)&#123;	</span><br><span class="line">    1、deleteTicketById(ticketId)	</span><br><span class="line">    2、给现金增加操作	</span><br><span class="line">&#125;else&#123;	</span><br><span class="line">    return “没有可用现金券”	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果是并发执行，很可能有问题的，应该利用数据库更新&#x2F;删除的原子性，正解如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">if(deleteAvailableTicketById(ticketId) == 1)&#123;	</span><br><span class="line">    1、给现金增加操作	</span><br><span class="line">&#125;else&#123;	</span><br><span class="line">    return “没有可用现金券”	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="16-数据库使用utf-8存储，-插入表情异常的坑"><a href="#16-数据库使用utf-8存储，-插入表情异常的坑" class="headerlink" title="16. 数据库使用utf-8存储， 插入表情异常的坑"></a>16. 数据库使用utf-8存储， 插入表情异常的坑</h3><p>低版本的MySQL支持的utf8编码，最大字符长度为 3 字节，但是呢，存储表情需要4个字节，因此如果用utf8存储表情的话，会报<code>SQLException: Incorrect string value: &#39;\xF0\x9F\x98\x84&#39; for column</code>，所以一般用utf8mb4编码去存储表情。</p>
+<h3 id="17-事务未生效的坑"><a href="#17-事务未生效的坑" class="headerlink" title="17. 事务未生效的坑"></a>17. 事务未生效的坑</h3><p>日常业务开发中，我们经常跟事务打交道，<strong>事务失效</strong>主要有以下几个场景：</p>
+<ul>
+<li>底层数据库引擎不支持事务</li>
+<li>在非public修饰的方法使用</li>
+<li>rollbackFor属性设置错误</li>
+<li>本类方法直接调用</li>
+<li>异常被try…catch吃了，导致事务失效。</li>
+</ul>
+<p>其中，最容易踩的坑就是后面两个，<strong>注解的事务方法给本类方法直接调用</strong>，伪代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class TransactionTest&#123;</span><br><span class="line">  public void A()&#123;</span><br><span class="line">    //插入一条数据</span><br><span class="line">    //调用方法B (本地的类调用，事务失效了)</span><br><span class="line">    B();</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  @Transactional</span><br><span class="line">  public void B()&#123;</span><br><span class="line">    //插入数据</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果用异常catch住，<strong>那事务也是会失效呢</strong>~，伪代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">@Transactional</span><br><span class="line">public void method()&#123;</span><br><span class="line">  try&#123;</span><br><span class="line">    //插入一条数据</span><br><span class="line">    insertA();</span><br><span class="line">    //更改一条数据</span><br><span class="line">    updateB();</span><br><span class="line">  &#125;catch(Exception e)&#123;</span><br><span class="line">    logger.error(&quot;异常被捕获了，那你的事务就失效咯&quot;,e);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="18-当反射遇到方法重载的坑"><a href="#18-当反射遇到方法重载的坑" class="headerlink" title="18. 当反射遇到方法重载的坑"></a>18. 当反射遇到方法重载的坑</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">/**</span><br><span class="line"> *  反射demo</span><br><span class="line"> *  @author 捡田螺的小男孩</span><br><span class="line"> */</span><br><span class="line">public class ReflectionTest &#123;</span><br><span class="line"></span><br><span class="line">    private void score(int score) &#123;</span><br><span class="line">        System.out.println(&quot;int grade =&quot; + score);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private void score(Integer score) &#123;</span><br><span class="line">        System.out.println(&quot;Integer grade =&quot; + score);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        ReflectionTest reflectionTest = new ReflectionTest();</span><br><span class="line">        reflectionTest.score(100);</span><br><span class="line">        reflectionTest.score(Integer.valueOf(100));</span><br><span class="line"></span><br><span class="line">        reflectionTest.getClass().getDeclaredMethod(&quot;score&quot;, Integer.TYPE).invoke(reflectionTest, Integer.valueOf(&quot;60&quot;));</span><br><span class="line">        reflectionTest.getClass().getDeclaredMethod(&quot;score&quot;, Integer.class).invoke(reflectionTest, Integer.valueOf(&quot;60&quot;));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int grade =100</span><br><span class="line">Integer grade =100</span><br><span class="line">int grade =60</span><br><span class="line">Integer grade =60</span><br></pre></td></tr></table></figure>
+<p>如果<strong>不通过反射</strong>，传入<code>Integer.valueOf(100)</code>，走的是Integer重载。但是呢，反射不是根据入参类型确定方法重载的，而是<strong>以反射获取方法时传入的方法名称和参数类型来确定</strong>的，正例如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">getClass().getDeclaredMethod(&quot;score&quot;, Integer.class)</span><br><span class="line">getClass().getDeclaredMethod(&quot;score&quot;, Integer.TYPE)</span><br></pre></td></tr></table></figure>
+
+<h3 id="19-mysql-时间-timestamp的坑"><a href="#19-mysql-时间-timestamp的坑" class="headerlink" title="19. mysql 时间 timestamp的坑"></a>19. mysql 时间 timestamp的坑</h3><p>有更新语句的时候，timestamp可能会自动更新为当前时间，看个demo</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">CREATE TABLE `t` (</span><br><span class="line">  `a` int(11) DEFAULT NULL,</span><br><span class="line">  `b` timestamp  NOT NULL,</span><br><span class="line">  `c` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</span><br><span class="line">) ENGINE=InnoDB DEFAULT CHARSET=utf8</span><br></pre></td></tr></table></figure>
+
+<p>我们可以发现 <strong>c列</strong> 是有<code>CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP</code>，所以c列会随着记录更新而<strong>更新为当前时间</strong>。但是b列也会随着有记录更新为而<strong>更新为当前时间</strong>。</p>
+<img src="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/19.png" class="lazyload placeholder" data-srcset="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/19.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+<p>可以使用datetime代替它,需要更新为当前时间，就把<code>now()</code>赋值进来，或者修改mysql的这个参数<code>explicit_defaults_for_timestamp</code>。</p>
+<h3 id="20-mysql8数据库的时区坑"><a href="#20-mysql8数据库的时区坑" class="headerlink" title="20. mysql8数据库的时区坑"></a>20. mysql8数据库的时区坑</h3><p>之前我们对mysql数据库进行升级，新版本为8.0.12。但是升级完之后，发现now()函数，获取到的时间比北京时间早8小时，原来是因为mysql8默认为美国那边的时间，需要指定下时区</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=UTF-8&amp;</span><br><span class="line">serverTimezone=Asia/Shanghai</span><br></pre></td></tr></table></figure>
+
+<h3 id="参考与感谢"><a href="#参考与感谢" class="headerlink" title="参考与感谢"></a>参考与感谢</h3><ul>
+<li><a href="https://time.geekbang.org/column/article/220230" title="Java业务开发常见错误100例">Java业务开发常见错误100例</a></li>
+</ul>
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>Python其实很简单！从零基础到大佬，超详细知识点汇总</title>
+    <url>/river-blog/2022/04/02/Python%E5%85%B6%E5%AE%9E%E5%BE%88%E7%AE%80%E5%8D%95%EF%BC%81%E4%BB%8E%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%88%B0%E5%A4%A7%E4%BD%AC%EF%BC%8C%E8%B6%85%E8%AF%A6%E7%BB%86%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/</url>
+    <content><![CDATA[<h2 id="Python-基础"><a href="#Python-基础" class="headerlink" title="Python 基础"></a>Python 基础</h2><h3 id="一、变量"><a href="#一、变量" class="headerlink" title="一、变量"></a>一、变量</h3><p>你可以把变量想象成一个用来存储值的单词。我们看个例子：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">Python 中定义一个变量并为它赋值是很容易的。假如你想存储数字 <span class="number">1</span> 到变量 “one”，让我们试试看：</span><br><span class="line"></span><br><span class="line">one = <span class="number">1</span></span><br><span class="line"></span><br><span class="line">超级简单吧？你只需要把值 <span class="number">1</span> 分配给变量 “one”。</span><br><span class="line"></span><br><span class="line">two = <span class="number">2</span></span><br><span class="line">some_number = <span class="number">10000</span></span><br><span class="line"></span><br><span class="line">只要你想，你可以把任意的值赋给任何其他的变量。正如你从上面看到的那样，变量 “two” 存储整型变量 <span class="number">2</span>，变量“some_number”存储 <span class="number">10000</span>。</span><br><span class="line">除了整型，我们还可以使用布尔值（<span class="literal">True</span>/<span class="literal">False</span>）、字符串、浮点型和其他数据类型。</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、控制流程：条件语句"><a href="#二、控制流程：条件语句" class="headerlink" title="二、控制流程：条件语句"></a>二、控制流程：条件语句</h3><p>“If”使用一个表达式来判断一个语句是 True 还是 False，如果是 True，那么执行 if 内的代码；</p>
+<span id="more"></span>
+
+<p>例子如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Hello Python If&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="number">2</span> &gt; <span class="number">1</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;2 is greater than 1&quot;</span>)</span><br><span class="line"><span class="number">2</span> 比 <span class="number">1</span> 大，所以 <span class="built_in">print</span> 代码被执行。</span><br><span class="line">当“<span class="keyword">if</span>”里面的表达式是 false 时，“<span class="keyword">else</span>”语句将会执行。</span><br><span class="line"><span class="keyword">if</span> <span class="number">1</span> &gt; <span class="number">2</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;1 is greater than 2&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;1 is not greater than 2&quot;</span>)</span><br><span class="line"><span class="number">1</span> 比 <span class="number">2</span> 小，所以 “<span class="keyword">else</span>”里面的代码会执行。</span><br><span class="line">你也可以使用 “<span class="keyword">elif</span>” 语句：</span><br><span class="line"><span class="keyword">if</span> <span class="number">1</span> &gt; <span class="number">2</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;1 is greater than 2&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> <span class="number">2</span> &gt; <span class="number">1</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;1 is not greater than 2&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;1 is equal to 2&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="三、循环和迭代"><a href="#三、循环和迭代" class="headerlink" title="三、循环和迭代"></a>三、循环和迭代</h3><p>在 Python 中，可以用不同的形式来进行迭代。我会说下 while 和 for。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">While循环：当语句是 <span class="literal">True</span> 时，<span class="keyword">while</span> 内部的代码块会执行。所以下面这段代码会打印出 <span class="number">1</span> 到 <span class="number">10</span></span><br><span class="line"></span><br><span class="line">num = <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> num &lt;= <span class="number">10</span>:</span><br><span class="line">    <span class="built_in">print</span>(num)</span><br><span class="line">    num += <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">while</span> 循环需要循环条件，如果条件一直是 <span class="literal">True</span>，它将会一直迭代，当 num 的值为 <span class="number">11</span> 时，循环条件为 false。另一段代码可以帮你更好的理解 <span class="keyword">while</span> 语句的用法：</span><br><span class="line"></span><br><span class="line">loop_condition = Truewhile loop_condition:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Loop Condition keeps: %s&quot;</span> %(loop_condition))</span><br><span class="line">    loop condition = <span class="literal">False</span></span><br><span class="line"></span><br><span class="line">循环条件是 <span class="literal">True</span> 所以会一直迭代，直到为 <span class="literal">False</span>。</span><br><span class="line">For循环：你可以在代码块上应用变量“num”，而“<span class="keyword">for</span>”语句将为你迭代它。此代码将打印与 <span class="keyword">while</span> 中相同的代码：从 <span class="number">1</span> 到 <span class="number">10</span>。</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">1</span>,<span class="number">11</span>):</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line"></span><br><span class="line">瞧见没？这太简单了。i 的范围从 <span class="number">1</span> 开始一直到第 <span class="number">11</span> 个元素（<span class="number">10</span>是第十个元素）</span><br></pre></td></tr></table></figure>
+
+<p>List：集合 | 数组 | 数据结构</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">假如你想要在一个变量里存储整数 <span class="number">1</span>，但是你也要存储 <span class="number">2</span> 和 <span class="number">3</span>，<span class="number">4</span>，<span class="number">5</span> ...</span><br><span class="line"></span><br><span class="line">不是用成百上千个变量，我有别的方法存储这些我想要存储的整数吗？你已经猜到了，确实有别的存储它们的方法。</span><br><span class="line"></span><br><span class="line">列表是一个集合，它能够存储一列值（就像你想要存储的这些），那么让我们来用一下它：</span><br><span class="line"></span><br><span class="line">myintegers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>]</span><br><span class="line"></span><br><span class="line">这真的很简单。我们创建了一个叫做 my_integer 的数组并且把数据存到了里面。</span><br><span class="line"></span><br><span class="line">也许你会问：“我要怎样获取数组里的值？”</span><br><span class="line"></span><br><span class="line">问得好。列表有一个叫做索引的概念。第一个元素的下表是索引<span class="number">0</span>（<span class="number">0</span>）。第二个的索引是<span class="number">1</span>，以此类推，你应该明白的。</span><br><span class="line"></span><br><span class="line">为了使它更加简洁，我们可以用它的索引代表数组元素。我画了出来：</span><br></pre></td></tr></table></figure>
+
+<img src="/river-blog/2022/04/02/Python%E5%85%B6%E5%AE%9E%E5%BE%88%E7%AE%80%E5%8D%95%EF%BC%81%E4%BB%8E%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%88%B0%E5%A4%A7%E4%BD%AC%EF%BC%8C%E8%B6%85%E8%AF%A6%E7%BB%86%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/%E7%B4%A2%E5%BC%95%E4%BB%A3%E8%A1%A8%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0.png" class="lazyload placeholder" data-srcset="/river-blog/2022/04/02/Python%E5%85%B6%E5%AE%9E%E5%BE%88%E7%AE%80%E5%8D%95%EF%BC%81%E4%BB%8E%E9%9B%B6%E5%9F%BA%E7%A1%80%E5%88%B0%E5%A4%A7%E4%BD%AC%EF%BC%8C%E8%B6%85%E8%AF%A6%E7%BB%86%E7%9F%A5%E8%AF%86%E7%82%B9%E6%B1%87%E6%80%BB/%E7%B4%A2%E5%BC%95%E4%BB%A3%E8%A1%A8%E6%95%B0%E7%BB%84%E5%85%83%E7%B4%A0.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+<p>用 Python 的语法，也很好去理解：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">my_integers = [<span class="number">5</span>, <span class="number">7</span>, <span class="number">1</span>, <span class="number">3</span>, <span class="number">4</span>]</span><br><span class="line"><span class="built_in">print</span>(my_integers[<span class="number">0</span>]) <span class="comment"># 5print(my_integers[1]) # 7print(my_integers[4]) # 4</span></span><br><span class="line"></span><br><span class="line">假如你不想存整数。你只想去存一些字符串，像你亲戚名字的列表。我的看起来是类似这样的：</span><br><span class="line"></span><br><span class="line">relatives_names[ <span class="string">&quot;Toshiaki&quot;</span>, <span class="string">&quot;Juliana&quot;</span>, <span class="string">&quot;Yuji&quot;</span>, <span class="string">&quot;Bruno&quot;</span>, <span class="string">&quot;Kaio&quot;</span>]</span><br><span class="line"><span class="built_in">print</span>(relatives_names[<span class="number">4</span>]) <span class="comment"># Kaio</span></span><br><span class="line"></span><br><span class="line">它的原理跟存整数一样，很友好。</span><br><span class="line">我们只学习了列表的索引是如何工作的，我还需要告诉你如何向列表的数据结构中添加一个元素（向列表中添加一个项目）。最常用的向列表中添加新数据的方法是拼接。我们来看一下它是如何使用的：</span><br><span class="line"></span><br><span class="line">bookshelf = []</span><br><span class="line">bookshelf.append(<span class="string">&quot;The Effective Engineer&quot;</span>)</span><br><span class="line">bookshelf.append(<span class="string">&quot;The 4 Hour work week&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(bookshelf[<span class="number">0</span>]) <span class="comment"># The Effective Engineerprint(bookshelf[1]) # The 4 Hour work W</span></span><br><span class="line"></span><br><span class="line">拼接超级简单，你仅需要把一个元素（比如“有效的机器”）作为拼接参数。</span><br><span class="line">好了，关于列表的知识这些就够了，让我们来看一下其它的数据结构。</span><br></pre></td></tr></table></figure>
+
+<p>字典：Key-Value 数据结构</p>
+<p>​        现在我们知道 List 是有索引的整型数字集合。但如果我们不像使用整型数字作为索引呢？我们可以用其他的一些数据结构，比如数字、字符串或者其他类型的索引。</p>
+<p>让我们学习下字典这种数据结构。字典是一个键值对的集合。字典差不多长这样：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">dictionary_example = &#123;</span><br><span class="line">    <span class="string">&quot;key1&quot;</span>: <span class="string">&quot;value1&quot;</span>,</span><br><span class="line">    <span class="string">&quot;key2&quot;</span>: <span class="string">&quot;value3&quot;</span>,</span><br><span class="line">    <span class="string">&quot;key3&quot;</span>: <span class="string">&quot;value3&quot;</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">Key 是指向 value 的索引。我们如何访问字典中的 value 呢？你应该猜到了，</span><br><span class="line">那就是使用 key。我们试一下：</span><br><span class="line"></span><br><span class="line">dictionary_tk = &#123;</span><br><span class="line">    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Leandro&quot;</span>,</span><br><span class="line">    <span class="string">&quot;nickname&quot;</span>: <span class="string">&quot;Tk&quot;</span>,</span><br><span class="line">    <span class="string">&quot;nationality&quot;</span>: <span class="string">&quot;Brazilian&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;My name is %s&quot;</span> %(dictionary_tk[<span class="string">&quot;name&quot;</span>])) <span class="comment"># My name is Leandro</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;But you can call me os&quot;</span> %(dictionary_tk[<span class="string">&quot;nickname&quot;</span>])) <span class="comment"># But you can call me Tk</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;And by the way I&#x27;m %s&quot;</span> %(dictionary_tk[ <span class="string">&quot;nationality&quot;</span>])) <span class="comment"># And by the way 1&#x27;m Bnazilian</span></span><br></pre></td></tr></table></figure>
+
+<p>​        我们有个 key(age)value(24)，使用字符串作为 key 整型作为 value。</p>
+<p>​        我创建了一个关于我的字典，其中包含我的名字、昵称和国籍。这些属性是字典中的 key。</p>
+<p>​        就像我们学过的使用索引访问 list 一样，我们同样使用索引（在字典中 key 就是索引）来访问存储在字典中的 value。</p>
+<p>​        正如我们使用 list 那样，让我们学习下如何向字典中添加元素。字典中主要是指向 value 的 key。当我们添加元素的时候同样如此：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">dictionary_tk = &#123;</span><br><span class="line">    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Leandro&quot;</span>,</span><br><span class="line">    <span class="string">&quot;nickname&quot;</span>: <span class="string">&quot;Tk&quot;</span>,</span><br><span class="line">    <span class="string">&quot;nationality&quot;</span>: <span class="string">&quot;Brazilian&quot;</span>,</span><br><span class="line">    <span class="string">&quot;age&quot;</span>: <span class="number">24</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;My name is %s&quot;</span> %(dictionary_tk[<span class="string">&quot;name&quot;</span>])) <span class="comment"># My name is Leandro</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;But you can call me os&quot;</span> %(dictionary_tk[<span class="string">&quot;nickname&quot;</span>])) <span class="comment"># But you can call me Tk</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;And by the way I&#x27;m %i and %s&quot;</span> %(dictionary_tk[ <span class="string">&quot;age&quot;</span>], dictionary_tk[ <span class="string">&quot;nationality&quot;</span>])) <span class="comment"># And by the way 1&#x27;m Bnazilian</span></span><br><span class="line"></span><br><span class="line">我们只需要将一个字典中的一个 key 指向一个value。没什么难的，对吧？</span><br></pre></td></tr></table></figure>
+
+<p>迭代：通过数据结构进行循环</p>
+<p>跟我们在 Python 基础中学习的一样，List 迭代十分简单。我们 Python 开发者通常使用 For 循环。</p>
+<p>我们试试看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">bookshelf = [</span><br><span class="line">    <span class="string">&quot;The Effective Eng1neer&quot;</span>,</span><br><span class="line">    <span class="string">&quot;The 4 hours work week&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Zero to One&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Lean Startup&quot;</span>,</span><br><span class="line">    <span class="string">&quot;Hooked&quot;</span></span><br><span class="line">]</span><br><span class="line"><span class="keyword">for</span> book <span class="keyword">in</span> bookshelf:</span><br><span class="line">    <span class="built_in">print</span>(book)</span><br></pre></td></tr></table></figure>
+
+<p>​        对于在书架上的每本书，我们打印（可以做任何操作）到控制台上。超级简单和直观吧。这就是 Python 的美妙之处。</p>
+<p>对于哈希数据结构，我们同样可以使用 for 循环，不过我们需要使用 key 来进行。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">dictionary =&#123; <span class="string">&quot;some_key&quot;</span> : <span class="string">&quot;some_value&quot;</span> &#125;</span><br><span class="line"><span class="keyword">for</span> key <span class="keyword">in</span> dictionary:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;%S --&gt; %s&quot;</span> %(key, dictionary[key])) <span class="comment"># some_key --&gt; some_value</span></span><br></pre></td></tr></table></figure>
+
+<p>上面是如何在字典中使用 For 循环的例子。对于字典中的每个 key，我们打印出 key 和 key 所对应的 value。</p>
+<p>另一种方式是使用 iteritems 方法。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">dictionary = &#123; <span class="string">&quot;some_key&quot;</span>: <span class="string">&quot;some_value&quot;</span> &#125;</span><br><span class="line"><span class="keyword">for</span> key, value <span class="keyword">in</span> dictionary.items():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;%s --&gt; %s&quot;</span> %(key,value))<span class="comment"># some_key --&gt; some_value</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">我们命名两个参数为 key 和 value，但是这不是必要的。我们可以随意命名。我们看下：</span><br><span class="line"></span><br><span class="line">dictionary_tk = &#123;</span><br><span class="line">    <span class="string">&quot;name&quot;</span>: <span class="string">&quot;Leandro&quot;</span>,</span><br><span class="line">    <span class="string">&quot;nickname&quot;</span>:<span class="string">&quot;Tk&quot;</span>,</span><br><span class="line">    <span class="string">&quot;nationality&quot;</span>: <span class="string">&quot;Brazilian&quot;</span>,</span><br><span class="line">    <span class="string">&quot;age&quot;</span>: <span class="number">24</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">for</span> attribute,value <span class="keyword">in</span> dictionary_tk.items():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;My %s is %s&quot;</span> %(attribute, value))</span><br><span class="line"><span class="comment">#My name is Leandro</span></span><br><span class="line"><span class="comment">#My nickname is Tk</span></span><br><span class="line"><span class="comment">#My nationality is Brazilian</span></span><br><span class="line"><span class="comment">#My age is 24</span></span><br><span class="line"></span><br><span class="line">可以看到我们使用了 attribute 作为字典中 key 的参数，这与使用 key 命名具有同样的效果。真是太棒了！</span><br></pre></td></tr></table></figure>
+
+<h2 id="类-amp-对象"><a href="#类-amp-对象" class="headerlink" title="类&amp;对象"></a>类&amp;对象</h2><p>一些理论：</p>
+<p>对象是对现实世界实体的表示，如汽车、狗或自行车。这些对象有两个共同的主要特征：</p>
+<ul>
+<li>数据</li>
+<li>行为</li>
+</ul>
+<p>汽车有数据，如车轮的数是，车门的数量和座位的空间，并且它们可以表现出其行为：</p>
+<ul>
+<li>加速</li>
+<li>停止</li>
+<li>显示剩余燃料</li>
+<li>以及许多其他的事情</li>
+</ul>
+<p>我们将数据看作是面向对象编程中的属性和行为。又表示为：<br>数据→属性和行为→方法</p>
+<p>​        而类是创建单个对象的蓝图。在现实世界中，我们经常发现许多相同类型的对象。比如说汽车。所有的汽车都有相同的构造和模型（都有一个引擎，轮子，门等）。每辆车都是由同一套蓝图构造成的，并具有相同的组件。</p>
+<p>Python 面向对象编程模式：ON</p>
+<p>Python，作为一种面向对象编程语言，存在这样的概念：类和对象。</p>
+<p>一个类是一个蓝图，是对象的模型。</p>
+<p>那么，一个类是一个模型，或者是一种定义属性和行为的方法（正如我们在理论部分讨论的那样）。</p>
+<p>举例来说：</p>
+<p>一个车辆类有它自己的属性来定义这个对象是个什么样的车辆。一辆车的属性有轮子数量，能源类型，座位容量和最大时速这些。</p>
+<p>考虑到这一点，让我们来看看 Python 的类的语法：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">cLass Vehicle:</span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">上边的代码，我们使用</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">语句来定义一个类</span>。是不是很容易？</span><br><span class="line">对象是一个类的实例化，我们可以通过类名来进行实例化。</span><br><span class="line"></span><br><span class="line">car = Vehicle()</span><br><span class="line"><span class="built_in">print</span>(car) <span class="comment"># &lt;__main__.Vehicle instance at 0x7fb1de6 c2638&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在这里，car 是类 Vehicle 的对象（或者实例化）。</p>
+<p>​        记得车辆类有四个属性：轮子的数量，油箱类型，座位容量和最大时速。当我们新建一个车辆对象时要设置所有的属性。所以在这里，我们定义一个类在它初始化的时候接受参数：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Vehicle</span>:</span><br><span class="line">    <span class="keyword">def</span>  <span class="title function_">__init__</span>(<span class="params">self, number_of_wheels, type_ of_tank, seating_capacity, maximum_velocity</span>):</span><br><span class="line">        self.number_of_wheels = number of_wheels</span><br><span class="line">        self.type_of_tank = type_of_tank</span><br><span class="line">        self.seating_capacity = seating_capacity</span><br><span class="line">        self.maximum_velocity = maximum_velocity</span><br></pre></td></tr></table></figure>
+
+<p>​        这个 init 方法。我们称之为构造函数。因此当我们在创建一个车辆对象时，可以定义这些属性。想象一下，我们喜欢 Tesla Model S，所以我们想创建一个这种类型的对象。它有四个轮子，使用电能源，五座并且最大时时速是250千米（155英里）。我们开始创建这样一个对象：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">tesla_mode1_s = Vehicie(<span class="number">4</span>, <span class="string">&#x27;electric&#x27;</span>, <span class="number">5</span>, <span class="number">250</span>)</span><br><span class="line"></span><br><span class="line">四轮+电能源+五座+最大时速<span class="number">250</span>千米。</span><br><span class="line">所有的属性已经设置了。但我们该如何访问这些属性值呢？我们给对象发送消息以向其请求该值。</span><br><span class="line">我们称之为方法。它是对象的行为。让我们实现它：</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Vehicle</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, number_of_wheels, type_of_tank, seating_capacity, maximum_velocity</span>):</span><br><span class="line">        self.number_of_wheels = number_of_wheels</span><br><span class="line">        self.type_of_tank = type_of_tank</span><br><span class="line">        self.seating_capacity = seating_capacity</span><br><span class="line">        self.maximum_velocity = maximum_velocity</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">number_of_wheels</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.number_of_wheels</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">set_number_of_wheels</span>(<span class="params">self, number</span>):</span><br><span class="line">        self.number_of_wheels = number</span><br></pre></td></tr></table></figure>
+
+<p>​        这是两个方法number_of_wheels和set_number_of_wheels的实现。我们将其称为getter &amp; setter。因为第一个函数是获取属性值，第二个函数是给属性设置新的值。</p>
+<p>在Python中，我们可以使用@property (修饰符)来定义getters和setters。让我们看着实际代码：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Vehicle</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, number_of_wheels, type_of_tank, seating_capacity, maximum_velocity</span>):</span><br><span class="line">        self.number_of_wheels = number_of_wheels</span><br><span class="line">        self.type_of_tank = type_of_tank</span><br><span class="line">        self.seating_capacity = seating capacity</span><br><span class="line">        self.maximum_velocity = maximum_velocity   @<span class="built_in">property</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">number_of_wheels</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="keyword">return</span> self.number_of_wheels   @number_of_wheels.setter</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">number</span> of wheels(self, number):</span><br><span class="line">        self.number_of_wheels = number</span><br><span class="line"></span><br><span class="line">并且我们可以将这些方法作为属性使用：</span><br><span class="line"></span><br><span class="line">tesla_model_s = Vehicle(<span class="number">4</span>, <span class="string">&#x27;electric&#x27;</span>, <span class="number">5</span>, <span class="number">250</span>)</span><br><span class="line"><span class="built_in">print</span>(tesla_model_s.number_of_wheels) <span class="comment"># 4tesla_model_s.number_of_wheels = 2</span></span><br><span class="line">                                      <span class="comment"># setting number of wheels to 2print(tesla_model_s.number_of_wheels) # 2</span></span><br></pre></td></tr></table></figure>
+
+<p>​        这和方法定义有轻微的不同。这里的方法是按照属性执行的。例如当我们设置新的轮胎数目时，我们并不将这两个看做参数，而是将数值2设置给number_of_wheels。这是编写python风格的getter和setter代码的一种方式。</p>
+<p>但我们也可以将该方法用于其他事项，例如“make_noise”方法。让我们看看：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Vehicle</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, number_of_wheels, type_of_tank, seating_capacity, maximum_velocity</span>):</span><br><span class="line">        self.number_of_wheels = number_of_wheels</span><br><span class="line">        self.type_of_tank = type_of_tank</span><br><span class="line">        self.seating_capacity = seating_capacity</span><br><span class="line">        self.maximum_velocity = maximum_velocity</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">make_noise</span>(<span class="params">self</span>):</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&#x27;VRUUUUUUUM&#x27;</span>)</span><br><span class="line">当我们调用此方法时,它仅仅返回一个字符串“VRRRRUUUUM.”</span><br><span class="line">tesla_model_s = Vehicle(<span class="number">4</span>, <span class="string">&#x27;electric&#x27;</span>, <span class="number">5</span>, <span class="number">250</span>)</span><br><span class="line">tesla_model_s.make_noise() <span class="comment"># VRUUUUUUUM</span></span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>后端</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>SQL进阶之约束、索引</title>
+    <url>/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/</url>
+    <content><![CDATA[<h2 id="什么是SQL约束？"><a href="#什么是SQL约束？" class="headerlink" title="什么是SQL约束？"></a>什么是SQL约束？</h2><p>SQL约束用于规定表中的数据规则。如果存在违反约束的数据行为，行为会被约束终止。约束可以在创建表时规定（通过CREATE TABLE语句），或者在表创建之后规定（通过ALTER TABLE语句）。</p>
+<ul>
+<li>SQL的CREATE TABLE＋CONSTRAINT语法。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> table_name</span><br><span class="line">(</span><br><span class="line">column_name1 data_type(size) constraint_name,</span><br><span class="line">column_name2 data_type(size) constraint_name,</span><br><span class="line">column_name3 data_type(size) constraint_name,</span><br><span class="line">....</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL中，我们有如下约束：<ul>
+<li><strong>NOT NULL</strong>：指示某列不能存储NULL值。</li>
+<li><strong>UNIQUE</strong>：保证某列的每行必须有唯一的值。</li>
+<li><strong>PRIMARY KEY</strong>：NOT NULL和UNIQUE的结合。确保某列（或两个列多个列的结合）有唯一标识，有助于更容易更快速地找到表中的一个特定的记录。</li>
+<li><strong>FOREIGN KEY</strong>：保证一个表中的数据匹配另一个表中的值的参照完整性。</li>
+<li><strong>CHECK</strong>：保证列中的值符合指定的条件。</li>
+<li><strong>DEFAULT</strong>：规定没有给列赋值时的默认值。</li>
+</ul>
+</li>
+</ul>
+<h2 id="NOT-NULL约束"><a href="#NOT-NULL约束" class="headerlink" title="NOT NULL约束"></a>NOT NULL约束</h2><p>在默认的情况下，表的列接受NULL值。NOT NULL约束强制列不接受NULL值。NOT NULL约束强制字段始终包含值。这意味着，如果不向字段添加值，就无法插入新记录或者更新记录。</p>
+<ul>
+<li>NOT NULL约束的示例：</li>
+</ul>
+<p>​        执行如下SQL语句，在创建表Persons时强制ID列、LastName列和FirstName列不接受NULL值。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons (</span><br><span class="line">    ID <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    FirstName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">    Age <span class="type">int</span></span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>添加NOT NULL约束的示例。</li>
+</ul>
+<p>执行如下SQL语句，在一个已创建的Persons表的Age字段中添加NOT NULL约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">MODIFY Age <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除NOT NULL约束的示例。</li>
+</ul>
+<p>执行如下SQL语句，在一个已创建的Persons表的Age字段中删除NOT NULL约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">MODIFY Age <span class="type">int</span> <span class="keyword">NULL</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<h2 id="UNIQUE约束"><a href="#UNIQUE约束" class="headerlink" title="UNIQUE约束"></a>UNIQUE约束</h2><p>UNIQUE约束唯一标识数据库表中的每条记录。UNIQUE和PRIMARY KEY约束均为列或列集合提供了唯一性的保证。PRIMARY  KEY约束拥有自动定义的UNIQUE约束。请注意，每个表可以有多个UNIQUE约束，但是每个表只能有一个PRIMARY KEY约束。</p>
+<ul>
+<li>UNIQUE和PRIMARY KEY的区别：<ul>
+<li>UNIQUE（唯一约束）和PRIMARY KEY（主键）非常相似，但是UNIQUE允许字段中出现一次NULL值，而PRIMARY KEY不允许出现 NULL 值，因为可以认为：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">PRIMARY KEY = UNIQUE +  NOT NULL</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>一张表可以包含多个UNIQUE字段，但是只能有一个主键。</li>
+<li>CREATE TABLE时的UNIQUE约束示例：</li>
+<li>在Mysql环境中：</li>
+</ul>
+<p>​        执行如下SQL语句，创建Persons表时在P_Id列上创建UNIQUE约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line"><span class="keyword">UNIQUE</span> (P_Id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">UNIQUE</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如需命名UNIQUE约束，并定义多个列的UNIQUE约束，请使用下面的SQL语法。</li>
+</ul>
+<p>​        执行如下SQL语句，创建表Persons时在P_Id列和LastName列上创建UNIQUE约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line"><span class="keyword">CONSTRAINT</span> uc_PersonID <span class="keyword">UNIQUE</span> (P_Id,LastName)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ALTER TABLE时的UNIQUE约束的示例：<ul>
+<li>当表已被创建时，在Persons表的P_Id列创建UNIQUE约束。</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，先创建Persons表，然后在Persons表的P_Id列创建UNIQUE约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">UNIQUE</span> (P_Id);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当表已被创建时，如需命名UNIQUE约束，并定义多个列的UNIQUE约束，请使用下面的SQL语法。</li>
+</ul>
+<p>​        执行如下SQL语句，先创建Persons表，然后在Persons表的P_Id列和LastName列创建UNIQUE约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> uc_PersonID <span class="keyword">UNIQUE</span> (P_Id,LastName);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>撤销UNIQUE约束的示例：<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，撤销UNIQUE约束。在体验完成之后，请您执行删表语句，再进行下一步的体验学习。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">DROP</span> INDEX uc_PersonID;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">CONSTRAINT</span> uc_PersonID;</span><br></pre></td></tr></table></figure>
+
+<h2 id="PRIMARY-KEY约束"><a href="#PRIMARY-KEY约束" class="headerlink" title="PRIMARY KEY约束"></a>PRIMARY KEY约束</h2><p>PRIMARY KEY约束唯一标识数据库表中的每条记录。主键必须包含唯一的值。主键列不能包含NULL值。每个表都应该有一个主键，并且每个表只能有一个主键。</p>
+<ul>
+<li>CREATE TABLE时的PRIMARY KEY约束的示例：<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，在Persons表创建时在P_Id列上创建PRIMARY KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (P_Id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如需命名PRIMARY KEY约束，并定义多个列的PRIMARY KEY约束，请使用下面的SQL语法。</li>
+</ul>
+<p>​        执行如下SQL语句，创建表Persons时在P_Id列和LastName列上创建PRIMARY KEY约束。</p>
+<p>​        <strong>说明：</strong>在下方的示例中，只有一个主键PRIMARY KEY（pk_PersonID）。然而，pk_PersonID的值是由两个列（P_Id和LastName）组成的。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line"><span class="keyword">CONSTRAINT</span> pk_PersonID <span class="keyword">PRIMARY</span> KEY (P_Id,LastName)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ALTER TABLE时的SQL PRIMARY KEY约束的示例：<ul>
+<li>当表已被创建时，在表Persons的LastName列创建PRIMARY KEY约束。</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，先创建Persons表，然后在表Persons的P_Id列创建PRIMARY KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">PRIMARY</span> KEY (P_Id);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>当表已被创建时，如需命名PRIMARY KEY约束，并定义多个列的PRIMARY KEY约束，请使用下面的SQL语法。</li>
+</ul>
+<p>​        执行如下SQL语句，先创建Persons表，然后在表Persons的P_Id列和LastName列创建PRIMARY KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> pk_PersonID <span class="keyword">PRIMARY</span> KEY (P_Id,LastName); </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>撤销PRIMARY KEY约束的示例：<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，撤销PRIMARY KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">PRIMARY</span> KEY;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">CONSTRAINT</span> pk_PersonID;</span><br></pre></td></tr></table></figure>
+
+<h2 id="FOREIGN-KEY约束"><a href="#FOREIGN-KEY约束" class="headerlink" title="FOREIGN KEY约束"></a>FOREIGN KEY约束</h2><p>一个表中的FOREIGN KEY指向另一个表中的UNIQUE KEY（唯一约束的键）。</p>
+<ul>
+<li>FOREIGN KEY约束的原理：</li>
+</ul>
+<p>​        假如我们有如下图两张表，Orders表中的P_Id列指向Persons表中的P_Id列。Persons表中的P_Id列是Persons表中的PRIMARY KEY。Orders表中的P_Id列是Orders表中的FOREIGN KEY。FOREIGN  KEY约束用于预防破坏表之间连接的行为。FOREIGN KEY约束也能防止非法数据插入外键列，因为它必须是它指向的那个表中的值之一。</p>
+<p><strong>Persons表</strong></p>
+<img src="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/ff3bbeb383eb4faf8839a65c8cec016f.png" class="lazyload placeholder" data-srcset="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/ff3bbeb383eb4faf8839a65c8cec016f.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+<p><strong>Orders表</strong></p>
+<img src="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/8b772bd13689487ea06c2ed55c20243e.png" class="lazyload placeholder" data-srcset="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/8b772bd13689487ea06c2ed55c20243e.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+<ul>
+<li>CREATE TABLE时的FOREIGN KEY约束的示例：<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，先创建Persons表，然后在表Persons的P_Id列和LastName列创建PRIMARY KEY约束。然后创建Orders表时在P_Id列上创建FOREIGN KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (P_Id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line">(</span><br><span class="line">O_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">OrderNo <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">P_Id <span class="type">int</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (O_Id),</span><br><span class="line"><span class="keyword">FOREIGN</span> KEY (P_Id) <span class="keyword">REFERENCES</span> Persons(P_Id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Orders; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line">(</span><br><span class="line">O_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">PRIMARY</span> KEY,</span><br><span class="line">OrderNo <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">FOREIGN</span> KEY <span class="keyword">REFERENCES</span> Persons(P_Id)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如需命名FOREIGN KEY约束，并定义多个列的FOREIGN KEY约束，请使用下面的SQL语法。</li>
+</ul>
+<p>​        执行如下SQL语句，创建表Orders时在P_Id列上创建FOREIGN KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line">(</span><br><span class="line">O_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">OrderNo <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">P_Id <span class="type">int</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (O_Id),</span><br><span class="line"><span class="keyword">CONSTRAINT</span> fk_PerOrders <span class="keyword">FOREIGN</span> KEY (P_Id)</span><br><span class="line"><span class="keyword">REFERENCES</span> Persons(P_Id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Orders; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ALTER TABLE 时的FOREIGN KEY约束的示例：<ul>
+<li>当Orders表已被创建时，如需在P_Id列创建FOREIGN KEY约束，请使用下面的 SQL。</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，先创建Orders表，然后在表Orders的P_Id列创建FOREIGN KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line">(</span><br><span class="line">O_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">OrderNo <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">P_Id <span class="type">int</span>,</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (O_Id)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line">  <span class="keyword">ADD</span> <span class="keyword">FOREIGN</span> KEY (P_Id)</span><br><span class="line">  <span class="keyword">REFERENCES</span> Persons(P_Id);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Orders; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如需命名FOREIGN KEY约束，并定义多个列的FOREIGN KEY约束，请使用下面的SQL语法。</li>
+</ul>
+<p>​        执行如下SQL语句，先创建Orders表，然后在表Orders的P_Id列创建FOREIGN KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">  <span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line">  (</span><br><span class="line">  O_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  OrderNo <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">  P_Id <span class="type">int</span>,</span><br><span class="line">  <span class="keyword">PRIMARY</span> KEY (O_Id)</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> fk_PerOrders</span><br><span class="line"><span class="keyword">FOREIGN</span> KEY (P_Id)</span><br><span class="line"><span class="keyword">REFERENCES</span> Persons(P_Id); </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>撤销FOREIGN KEY约束的示例：<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，撤销FOREIGN KEY约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">FOREIGN</span> KEY fk_PerOrders;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Orders;</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">CONSTRAINT</span> fk_PerOrders;</span><br></pre></td></tr></table></figure>
+
+<h2 id="CHECK约束"><a href="#CHECK约束" class="headerlink" title="CHECK约束"></a>CHECK约束</h2><p>CHECK约束用于限制列中的值的范围。如果对单个列定义CHECK约束，那么该列只允许特定的值。如果对一个表定义CHECK约束，那么此约束会基于行中其他列的值在特定的列中对值进行限制。</p>
+<ul>
+<li>CREATE TABLE时的CHECK约束：<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​        执行如下SQL语句，在Persons表创建时在P_Id列上创建CHECK约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line"><span class="keyword">CHECK</span> (P_Id<span class="operator">&gt;</span><span class="number">0</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">CHECK</span> (P_Id<span class="operator">&gt;</span><span class="number">0</span>),</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如需命名CHECK约束，并定义多个列的CHECK约束，请使用下面的SQL语法。</li>
+</ul>
+<p>​        执行如下SQL语句，创建表Persons时在P_Id列和City列上创建CHECK约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line"><span class="keyword">CONSTRAINT</span> chk_Person <span class="keyword">CHECK</span> (P_Id<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">AND</span> City<span class="operator">=</span><span class="string">&#x27;Sandnes&#x27;</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ALTER TABLE时的SQL CHECK约束：<ul>
+<li>当表已被创建时，在表Persons的在P_Id列创建CHECK约束，请使用下面的SQL。</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，先创建Persons表，然后在表Persons的P_Id列创建CHECK约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CHECK</span> (P_Id<span class="operator">&gt;</span><span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如需命名CHECK约束，并定义多个列的CHECK约束，请使用下面的SQL语法。</li>
+</ul>
+<p>​        执行如下SQL语句，先创建Persons表，然后在表Persons的P_Id列和City列创建CHECK约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ADD</span> <span class="keyword">CONSTRAINT</span> chk_Person <span class="keyword">CHECK</span> (P_Id<span class="operator">&gt;</span><span class="number">0</span> <span class="keyword">AND</span> City<span class="operator">=</span><span class="string">&#x27;Sandnes&#x27;</span>); </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>撤销CHECK约束：<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，撤销CHECK约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">CHECK</span> chk_Person;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">CONSTRAINT</span> chk_Person;</span><br></pre></td></tr></table></figure>
+
+<h2 id="DEFAULT约束"><a href="#DEFAULT约束" class="headerlink" title="DEFAULT约束"></a>DEFAULT约束</h2><p>DEFAULT约束用于向列中插入默认值。如果没有规定其他的值，那么会将默认值添加到所有的新记录。</p>
+<ul>
+<li>CREATE TABLE时的DEFAULT约束的示例：<ul>
+<li>执行如下SQL语句，在Persons表创建时在City列上创建DEFAULT约束。在体验完成之后，请您执行删表语句，再进行下一步的体验学习。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">DEFAULT</span> <span class="string">&#x27;Sandnes&#x27;</span></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过使用类似NOW()这样的函数，DEFAULT约束也可以用于插入系统值。</li>
+</ul>
+<p>​        执行如下SQL语句，在Orders表创建时在OrderDate列上创建DEFAULT约束并使用GETDATE()函数插入系统值。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Orders</span><br><span class="line">(</span><br><span class="line">O_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">OrderNo <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">P_Id <span class="type">int</span>,</span><br><span class="line">OrderDate <span class="type">TIMESTAMP</span> <span class="keyword">DEFAULT</span> NOW()</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Orders; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ALTER TABLE时的DEFAULT约束的示例：<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，先创建Persons表，然后在表Persons的City列创建DEFAULT约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ALTER</span> City <span class="keyword">SET</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;SANDNES&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> City <span class="keyword">SET</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;SANDNES&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在Oracle环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">MODIFY City <span class="keyword">DEFAULT</span> <span class="string">&#x27;SANDNES&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>撤销DEFAULT约束的示例。<ul>
+<li>在Mysql环境中：</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，撤销DEFAULT约束。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ALTER</span> City <span class="keyword">DROP</span> <span class="keyword">DEFAULT</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>在SQL Server&#x2F;Oracle&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> City <span class="keyword">DROP</span> <span class="keyword">DEFAULT</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="CREATE-INDEX语句"><a href="#CREATE-INDEX语句" class="headerlink" title="CREATE INDEX语句"></a>CREATE INDEX语句</h2><p>CREATE INDEX 语句用于在表中创建索引。在不读取整个表的情况下，索引使数据库应用程序可以更快地查找数据。</p>
+<p>您可以在表中创建索引，以便更加快速高效地查询数据。用户无法看到索引，它们只能被用来加速搜索&#x2F;查询。</p>
+<p><strong>说明：</strong></p>
+<ul>
+<li><p>更新一个包含索引的表需要比更新一个没有索引的表花费更多的时间，这是由于索引本身也需要更新。因此，理想的做法是仅在常被搜索的列（以及表）上面创建索引。</p>
+</li>
+<li><p>用于创建索引的语法在不同的数据库中不一样。因此，检查您的数据库中创建索引的语法。</p>
+</li>
+<li><p>CREATE INDEX的语法：</p>
+</li>
+</ul>
+<p>​        在表上创建一个简单的索引，允许使用重复的值。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX index_name</span><br><span class="line"><span class="keyword">ON</span> table_name (column_name);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>CREATE UNIQUE INDEX的语法：</li>
+</ul>
+<p>​        在表上创建一个唯一的索引，不允许使用重复的值。唯一的索引意味着两个行不能拥有相同的索引值。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX index_name</span><br><span class="line"><span class="keyword">ON</span> table_name (column_name);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>CREATE INDEX的示例：</li>
+</ul>
+<p>​        执行如下语句，先创建Persons表，然后在Persons表的LastName列上创建一个名为PIndex的索引。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> INDEX PIndex</span><br><span class="line"><span class="keyword">ON</span> Persons (LastName);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果您希望索引不止一个列，您可以在括号中列出这些列的名称，用逗号隔开。</li>
+</ul>
+<p>​        执行如下语句，先创建Persons表，然后在Persons表的LastName列上创建一个名为PIndex的索引。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">P_Id <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> INDEX PIndex</span><br><span class="line"><span class="keyword">ON</span> Persons (LastName, FirstName);</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<h2 id="撤销索引、撤销表以及撤销数据库"><a href="#撤销索引、撤销表以及撤销数据库" class="headerlink" title="撤销索引、撤销表以及撤销数据库"></a>撤销索引、撤销表以及撤销数据库</h2><p>通过使用DROP语句，可以轻松地删除索引、表和数据库。</p>
+<ul>
+<li>DROP INDEX语句：</li>
+</ul>
+<p>​        DROP INDEX语句用于删除表中的索引。</p>
+<ul>
+<li>用于MS Access的DROP INDEX语法。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX index_name <span class="keyword">ON</span> table_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用于MS SQL Server的DROP INDEX语法。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX table_name.index_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用于DB2&#x2F;Oracle的DROP INDEX语法。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX index_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>用于MySQL的DROP INDEX语法。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> INDEX index_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DROP TABLE语句：</li>
+</ul>
+<p>​        DROP TABLE语句用于删除表。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> DATABASE database_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>DROP DATABASE语句：</li>
+</ul>
+<p>​        DROP DATABASE语句用于删除数据库。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> DATABASE database_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>TRUNCATE TABLE 语句：</li>
+</ul>
+<p>​        TRUNCATE TABLE语句用于仅需要删除表内的数据，但并不删除表本身。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">TRUNCATE</span> <span class="keyword">TABLE</span> table_name;</span><br></pre></td></tr></table></figure>
+
+<h2 id="ALTER-TABLE语句"><a href="#ALTER-TABLE语句" class="headerlink" title="ALTER TABLE语句"></a>ALTER TABLE语句</h2><ul>
+<li>ALTER TABLE语句用于在已有的表中添加、删除或修改列。</li>
+<li>ALTER TABLE语法：<ul>
+<li>在表中添加列。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name</span><br><span class="line"><span class="keyword">ADD</span> column_name datatype;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>删除表中的列。</li>
+</ul>
+<p><strong>注意：</strong>某些数据库系统不允许这种在数据库表中删除列的方式。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">COLUMN</span> column_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>改变表中列的数据类型。<ul>
+<li>在MySQL&#x2F;Oracle环境中：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name</span><br><span class="line">MODIFY <span class="keyword">COLUMN</span> column_name datatype;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>SQL Server&#x2F;MS Access环境中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> table_name</span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">COLUMN</span> column_name datatype;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ALTER TABLE示例：<ul>
+<li>ALTER TABLE添加列的示例。</li>
+</ul>
+</li>
+</ul>
+<p>​                执行如下SQL语句，先创建Persons表，插入三条数据，然后在Persons表添加一个名为 DateOfBirth的列。DateOfBirth列的类型是date，可以存放日期。我们现在查看Persons表，可以看到新增的DateOfBirth列。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">PersonID <span class="type">int</span>,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Persons <span class="keyword">VALUES</span> (<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;Hansen&#x27;</span>, <span class="string">&#x27;Ola&#x27;</span>,<span class="string">&#x27;Timoteivn 10&#x27;</span>,<span class="string">&#x27;Sandnes&#x27;</span>), (<span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;Svendson&#x27;</span>, <span class="string">&#x27;Tove&#x27;</span>,<span class="string">&#x27;Borgvn 23&#x27;</span>,<span class="string">&#x27;Sandnes&#x27;</span>), (<span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;Pettersen&#x27;</span>, <span class="string">&#x27;Kari&#x27;</span>,<span class="string">&#x27;Storgt 20&#x27;</span>,<span class="string">&#x27;Stavanger&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">ADD</span> DateOfBirth <span class="type">date</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ALTER TABLE改变数据类型的示例。</li>
+</ul>
+<p>​        执行如下SQL语句，改变Persons表中DateOfBirth列的数据类型为year。现在DateOfBirth列的类型是year，可以存放2位或4位格式的年份。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">MODIFY <span class="keyword">COLUMN</span> DateOfBirth <span class="keyword">year</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ALTER TABLE删除列的示例。</li>
+</ul>
+<p>​        执行如下SQL语句，删除Person表中的DateOfBirth列，然后查看Person表，可以看到DateOfBirth列已被删除。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">ALTER</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">COLUMN</span> DateOfBirth;</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons;</span><br><span class="line"></span><br><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> Persons;</span><br></pre></td></tr></table></figure>
+
+<h2 id="AUTO-INCREMENT字段"><a href="#AUTO-INCREMENT字段" class="headerlink" title="AUTO INCREMENT字段"></a>AUTO INCREMENT字段</h2><p>Auto-increment会在新记录插入表中时生成一个唯一的数字。</p>
+<ul>
+<li>在MySQL中的语法：<ul>
+<li>执行如下SQL语句，创建Persons表并把ID列定义为Auto-increment主键字段。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> Persons</span><br><span class="line">(</span><br><span class="line">ID <span class="type">int</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,</span><br><span class="line">LastName <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span>,</span><br><span class="line">FirstName <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">Address <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line">City <span class="type">varchar</span>(<span class="number">255</span>),</span><br><span class="line"><span class="keyword">PRIMARY</span> KEY (ID)</span><br><span class="line">); </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>MySQL使用AUTO_INCREMENT关键字来执行Auto-increment任务。默认地，AUTO_INCREMENT的开始值是1，每条新记录递增1。要让AUTO_INCREMENT序列以其他的值起始，请使用下面的SQL语法。</li>
+</ul>
+<p>​                执行如下SQL语句，让Persons表的AUTO_INCREMENT序列以100为起始值。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">ALTER TABLE Persons AUTO_INCREMENT=100; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>要在Persons表中插入新记录，我们不必为ID列规定值（会自动添加一个唯一的值）。</li>
+</ul>
+<p>​        执行如下SQL语句，在Persons表中插入一条记录。然后查看Person表。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Persons (FirstName,LastName)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;Lars&#x27;</span>,<span class="string">&#x27;Monsen&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons;</span><br></pre></td></tr></table></figure>
+]]></content>
+  </entry>
+  <entry>
+    <title>Hello World</title>
+    <url>/river-blog/2022/12/06/hello-world/</url>
+    <content><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
+<span id="more"></span>
+
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
+]]></content>
+  </entry>
+  <entry>
+    <title>myFirstDiary</title>
+    <url>/river-blog/2022/03/28/myFirstDiary/</url>
+    <content><![CDATA[<h2 id="指令-Hexo"><a href="#指令-Hexo" class="headerlink" title="指令 | Hexo"></a>指令 | Hexo</h2><div class="video-container"><iframe src="https://www.youtube.com/embed/mgdXi5npArQ" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<h3 id="init"><a href="#init" class="headerlink" title="init"></a>init</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo init [folder]</span><br></pre></td></tr></table></figure>
+
+<p>新建一个网站。如果没有设置 <code>folder</code> ，Hexo 默认在目前的文件夹建立网站。</p>
+<p>本命令相当于执行了以下几步：</p>
+<ol>
+<li>Git clone <a href="https://github.com/hexojs/hexo-starter">hexo-starter</a> 和 <a href="https://github.com/hexojs/hexo-theme-landscape">hexo-theme-landscape</a> 主题到当前目录或指定目录。</li>
+<li>使用 <a href="https://classic.yarnpkg.com/lang/en/">Yarn 1</a>、<a href="https://pnpm.js.org/">pnpm</a> 或 <a href="https://docs.npmjs.com/cli/install">npm</a> 包管理器下载依赖（如有已安装多个，则列在前面的优先）。npm 默认随 <a href="/docs/#Install-Node-js">Node.js</a> 安装。</li>
+</ol>
+<span id="more"></span>
+
+<h3 id="new"><a href="#new" class="headerlink" title="new"></a>new</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new [layout] &lt;title&gt;</span><br></pre></td></tr></table></figure>
+
+<p>新建一篇文章。如果没有设置 <code>layout</code> 的话，默认使用 <a href="configuration.html">_config.yml</a> 中的 <code>default_layout</code> 参数代替。如果标题包含空格的话，请使用引号括起来。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;post title with whitespace&quot;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-p</code>, <code>--path</code></td>
+<td>自定义新文章的路径</td>
+</tr>
+<tr>
+<td><code>-r</code>, <code>--replace</code></td>
+<td>如果存在同名文章，将其替换</td>
+</tr>
+<tr>
+<td><code>-s</code>, <code>--slug</code></td>
+<td>文章的 Slug，作为新文章的文件名和发布后的 URL</td>
+</tr>
+</tbody></table>
+<p>默认情况下，Hexo 会使用文章的标题来决定文章文件的路径。对于独立页面来说，Hexo 会创建一个以标题为名字的目录，并在目录中放置一个 <code>index.md</code> 文件。你可以使用 <code>--path</code> 参数来覆盖上述行为、自行决定文件的目录：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new page --path about/me <span class="string">&quot;About me&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>以上命令会创建一个 <code>source/about/me.md</code> 文件，同时 Front Matter 中的 title 为 <code>&quot;About me&quot;</code></p>
+<p>注意！title 是必须指定的！如果你这么做并不能达到你的目的：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">hexo new page --path about/me</span><br></pre></td></tr></table></figure>
+
+<p>此时 Hexo 会创建 <code>source/_posts/about/me.md</code>，同时 <code>me.md</code> 的 Front Matter 中的 title 为 <code>&quot;page&quot;</code>。这是因为在上述命令中，hexo-cli 将 <code>page</code> 视为指定文章的标题、并采用默认的 <code>layout</code>。</p>
+<h3 id="generate"><a href="#generate" class="headerlink" title="generate"></a>generate</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>生成静态文件。</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-d</code>, <code>--deploy</code></td>
+<td>文件生成后立即部署网站</td>
+</tr>
+<tr>
+<td><code>-w</code>, <code>--watch</code></td>
+<td>监视文件变动</td>
+</tr>
+<tr>
+<td><code>-b</code>, <code>--bail</code></td>
+<td>生成过程中如果发生任何未处理的异常则抛出异常</td>
+</tr>
+<tr>
+<td><code>-f</code>, <code>--force</code></td>
+<td>强制重新生成文件<br>Hexo 引入了差分机制，如果 <code>public</code> 目录存在，那么 <code>hexo g</code> 只会重新生成改动的文件。<br>使用该参数的效果接近 <code>hexo clean &amp;&amp; hexo generate</code></td>
+</tr>
+<tr>
+<td><code>-c</code>, <code>--concurrency</code></td>
+<td>最大同时生成文件的数量，默认无限制</td>
+</tr>
+</tbody></table>
+<p>该命令可以简写为</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo g</span><br></pre></td></tr></table></figure>
+
+<h3 id="publish"><a href="#publish" class="headerlink" title="publish"></a>publish</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo publish [layout] &lt;filename&gt;</span><br></pre></td></tr></table></figure>
+
+<p>发表草稿。</p>
+<h3 id="server"><a href="#server" class="headerlink" title="server"></a>server</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>启动服务器。默认情况下，访问网址为： <code>http://localhost:4000/</code>。</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-p</code>, <code>--port</code></td>
+<td>重设端口</td>
+</tr>
+<tr>
+<td><code>-s</code>, <code>--static</code></td>
+<td>只使用静态文件</td>
+</tr>
+<tr>
+<td><code>-l</code>, <code>--log</code></td>
+<td>启动日记记录，使用覆盖记录格式</td>
+</tr>
+</tbody></table>
+<h3 id="deploy"><a href="#deploy" class="headerlink" title="deploy"></a>deploy</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>部署网站。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-g</code>, <code>--generate</code></td>
+<td>部署之前预先生成静态文件</td>
+</tr>
+</tbody></table>
+<p>该命令可以简写为：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo d</span><br></pre></td></tr></table></figure>
+
+<h3 id="clean"><a href="#clean" class="headerlink" title="clean"></a>clean</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo clean</span><br></pre></td></tr></table></figure>
+
+<p>清除缓存文件 (<code>db.json</code>) 和已生成的静态文件 (<code>public</code>)。</p>
+<p>在某些情况（尤其是更换主题后），如果发现您对站点的更改无论如何也不生效，您可能需要运行该命令。</p>
+<h3 id="version"><a href="#version" class="headerlink" title="version"></a>version</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo version</span><br></pre></td></tr></table></figure>
+
+<p>显示 Hexo 版本。</p>
+<h2 id="写作-Hexo"><a href="#写作-Hexo" class="headerlink" title="写作 | Hexo"></a>写作 | Hexo</h2><div class="video-container"><iframe src="https://www.youtube.com/embed/HLJ9jJy7CMg" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>你可以执行下列命令来创建一篇新文章或者新的页面。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo new [layout] &lt;title&gt;</span><br></pre></td></tr></table></figure>
+
+<p>您可以在命令中指定文章的布局（layout），默认为 <code>post</code>，可以通过修改 <code>_config.yml</code> 中的 <code>default_layout</code> 参数来指定默认布局。</p>
+<h3 id="布局（Layout）"><a href="#布局（Layout）" class="headerlink" title="布局（Layout）"></a>布局（Layout）</h3><p>Hexo 有三种默认布局：<code>post</code>、<code>page</code> 和 <code>draft</code>。在创建这三种不同类型的文件时，它们将会被保存到不同的路径；而您自定义的其他布局和 <code>post</code> 相同，都将储存到 <code>source/_posts</code> 文件夹。</p>
+<table>
+<thead>
+<tr>
+<th>布局</th>
+<th>路径</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>post</code></td>
+<td><code>source/_posts</code></td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td><code>source</code></td>
+</tr>
+<tr>
+<td><code>draft</code></td>
+<td><code>source/_drafts</code></td>
+</tr>
+</tbody></table>
+<h3 id="草稿"><a href="#草稿" class="headerlink" title="草稿"></a>草稿</h3><p>刚刚提到了 Hexo 的一种特殊布局：<code>draft</code>，这种布局在建立时会被保存到 <code>source/_drafts</code> 文件夹，您可通过 <code>publish</code> 命令将草稿移动到 <code>source/_posts</code> 文件夹，该命令的使用方式与 <code>new</code> 十分类似，您也可在命令中指定 <code>layout</code> 来指定布局。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">$ hexo publish [layout] &lt;title&gt;</span><br></pre></td></tr></table></figure>
+
+<p>草稿默认不会显示在页面中，您可在执行时加上 <code>--draft</code> 参数，或是把 <code>render_drafts</code> 参数设为 <code>true</code> 来预览草稿。</p>
+<h2 id="Front-matter-Hexo"><a href="#Front-matter-Hexo" class="headerlink" title="Front-matter | Hexo"></a>Front-matter | Hexo</h2><div class="video-container"><iframe src="https://www.youtube.com/embed/Rl48Yk4A_V8" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>Front-matter 是文件最上方以 <code>---</code> 分隔的区域，用于指定个别文件的变量，举例来说：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hello World</span><br><span class="line">date: 2013/7/13 20:46:25</span><br><span class="line">---</span><br></pre></td></tr></table></figure>
+
+<p>以下是预先定义的参数，您可在模板中使用这些参数值并加以利用。</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+<th>默认值</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>layout</code></td>
+<td>布局</td>
+<td><a href="https://github.com/hexojs/site/blob/master/zh-cn/docs/configuration#%E6%96%87%E7%AB%A0"><code>config.default_layout</code></a></td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td>标题</td>
+<td>文章的文件名</td>
+</tr>
+<tr>
+<td><code>date</code></td>
+<td>建立日期</td>
+<td>文件建立日期</td>
+</tr>
+<tr>
+<td><code>updated</code></td>
+<td>更新日期</td>
+<td>文件更新日期</td>
+</tr>
+<tr>
+<td><code>comments</code></td>
+<td>开启文章的评论功能</td>
+<td>true</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>标签（不适用于分页）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>categories</code></td>
+<td>分类（不适用于分页）</td>
+<td></td>
+</tr>
+<tr>
+<td><code>permalink</code></td>
+<td>覆盖文章的永久链接，永久链接应该以 <code>/</code> 或 <code>.html</code> 结尾</td>
+<td><code>null</code></td>
+</tr>
+<tr>
+<td><code>excerpt</code></td>
+<td>纯文本的页面摘要。使用 <a href="https://github.com/hexojs/site/blob/master/zh-cn/docs/tag-plugins#%E6%96%87%E7%AB%A0%E6%91%98%E8%A6%81%E5%92%8C%E6%88%AA%E6%96%AD">该插件</a> 来格式化文本</td>
+<td></td>
+</tr>
+<tr>
+<td><code>disableNunjucks</code></td>
+<td>启用时禁用 Nunjucks 标签 <code>&#123;&#123; &#125;&#125;</code>&#x2F;<code>&#123;% %&#125;</code> 和 <a href="https://github.com/hexojs/site/blob/master/zh-cn/docs/tag-plugins">标签插件</a> 的渲染功能</td>
+<td>false</td>
+</tr>
+<tr>
+<td><code>lang</code></td>
+<td>设置语言以覆盖 <a href="https://github.com/hexojs/site/blob/master/zh-cn/docs/internationalization#%E8%B7%AF%E5%BE%84">自动检测</a></td>
+<td>继承自 <code>_config.yml</code></td>
+</tr>
+</tbody></table>
+<h2 id="标签插件（Tag-Plugins）-Hexo"><a href="#标签插件（Tag-Plugins）-Hexo" class="headerlink" title="标签插件（Tag Plugins） | Hexo"></a>标签插件（Tag Plugins） | Hexo</h2><p>标签插件和 Front-matter 中的标签不同，它们是用于在文章中快速插入特定内容的插件。</p>
+<p>虽然你可以使用任何格式书写你的文章，但是标签插件永远可用，且语法也都是一致的。</p>
+<p><em>标签插件不应该被包裹在 Markdown 语法中，例如： <code>[](&#123;% post_path lorem-ipsum %&#125;)</code> 是不被支持的。</em></p>
+<h3 id="Youtube"><a href="#Youtube" class="headerlink" title="Youtube"></a>Youtube</h3><p>在文章中插入 Youtube 视频。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% youtube video_id [type] [cookie] %&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h4><p><strong>视频</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% youtube lJIrF4YjHfQ %&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>播放列表</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% youtube PL9hW1uS6HUfscJ9DHkOSoOX45MjXduUxo &#x27;playlist&#x27; %&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>隐私模式</strong></p>
+<p>在这种模式下，禁用 YouTube cookie</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% youtube lJIrF4YjHfQ false %&#125;</span><br><span class="line">&#123;% youtube PL9hW1uS6HUfscJ9DHkOSoOX45MjXduUxo &#x27;playlist&#x27; false %&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="引用文章"><a href="#引用文章" class="headerlink" title="引用文章"></a>引用文章</h3><p>引用其他文章的链接。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% post_path filename %&#125;</span><br><span class="line">&#123;% post_link filename [title] [escape] %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在使用此标签时可以忽略文章文件所在的路径或者文章的永久链接信息、如语言、日期。</p>
+<p>例如，在文章中使用 <code>{% post_link how-to-bake-a-cake %}</code> 时，只需有一个名为 <code>how-to-bake-a-cake.md</code> 的文章文件即可。即使这个文件位于站点文件夹的 <code>source/posts/2015-02-my-family-holiday</code> 目录下、或者文章的永久链接是 <code>2018/en/how-to-bake-a-cake</code>，都没有影响。</p>
+<p>默认链接文字是文章的标题，你也可以自定义要显示的文本。</p>
+<p>默认对文章的标题和自定义标题里的特殊字符进行转义。可以使用<code>escape</code>选项，禁止对特殊字符进行转义。</p>
+<p><strong>链接使用文章的标题</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% raw %&#125;&#123;% post_link hello-world %&#125;&#123;% endraw %&#125;</span><br></pre></td></tr></table></figure>
+
+<a href="/river-blog/2022/12/06/hello-world/" title="Hello World">Hello World</a>
+
+<p><strong>链接使用自定义文字</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% raw %&#125;&#123;% post_link hello-world &#x27;通往文章的链接&#x27; %&#125;&#123;% endraw %&#125;</span><br></pre></td></tr></table></figure>
+
+<a href="/river-blog/2022/12/06/hello-world/" title="Hello World">通往文章的链接</a>
+
+<p><strong>对标题的特殊字符进行转义</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% post_link hello-world &#x27;How to use &lt;b&gt; tag in title&#x27; %&#125;</span><br></pre></td></tr></table></figure>
+
+<a href="/river-blog/2022/12/06/hello-world/" title="Hello World">How to use &lt;b&gt; tag in title</a>
+
+<p><strong>禁止对标题的特殊字符进行转义</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% post_link hello-world &#x27;&lt;b&gt;bold&lt;/b&gt; custom title&#x27; false %&#125;</span><br></pre></td></tr></table></figure>
+
+<a href="/river-blog/2022/12/06/hello-world/" title="Hello World"><b>bold</b> custom title</a>
+
+<h3 id="引用资源"><a href="#引用资源" class="headerlink" title="引用资源"></a>引用资源</h3><p>引用文章的资源，与 <a href="https://hexo.io/zh-cn/docs/asset-folders">资源文件夹</a> 一起使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% asset_path filename %&#125;</span><br><span class="line">&#123;% asset_img [class names] slug [width] [height] [title text [alt text]] %&#125;</span><br><span class="line">&#123;% asset_link filename [title] [escape] %&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="嵌入图片"><a href="#嵌入图片" class="headerlink" title="嵌入图片"></a>嵌入图片</h4><p><em>hexo-renderer-marked 3.1.0+ 可以（可选）自动解析图片的文章路径，参考 <a href="https://hexo.io/zh-cn/docs/asset-folders#%E4%BD%BF%E7%94%A8-Markdown-%E5%B5%8C%E5%85%A5%E5%9B%BE%E7%89%87">本节</a> 如何启用它。</em></p>
+<p>“foo.jpg” 位于 <code>http://example.com/2020/01/02/hello/foo.jpg</code>。</p>
+<p><strong>默认（无选项）</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% asset_img foo.jpg %&#125;</span><br><span class="line">&lt;img src=&quot;/2020/01/02/hello/foo.jpg&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>自定义 class 属性</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% asset_img post-image foo.jpg %&#125;</span><br><span class="line">&lt;img src=&quot;/2020/01/02/hello/foo.jpg&quot; class=&quot;post-image&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>展示尺寸</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% asset_img foo.jpg 500 400 %&#125;</span><br><span class="line">&lt;img src=&quot;/2020/01/02/hello/foo.jpg&quot; width=&quot;500&quot; height=&quot;400&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>title 和 alt 属性</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% asset_img logo.svg &quot;lorem ipsum&#x27;dolor&#x27;&quot; %&#125;</span><br><span class="line">&lt;img src=&quot;/2020/01/02/hello/foo.jpg&quot; title=&quot;lorem ipsum&quot; alt=&quot;dolor&quot;&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="文章摘要和截断"><a href="#文章摘要和截断" class="headerlink" title="文章摘要和截断"></a>文章摘要和截断</h3><p>在文章中使用 <code>&lt;!-- more --&gt;</code>，那么 <code>&lt;!-- more --&gt;</code> 之前的文字将会被视为摘要。首页中将只出现这部分文字，同时这部分文字也会出现在正文之中。</p>
+<p>例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span><br><span class="line">&lt;!-- more --&gt;</span><br><span class="line">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span><br></pre></td></tr></table></figure>
+
+<p>首页中将只会出现</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span><br></pre></td></tr></table></figure>
+
+<p>正文中则会出现</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</span><br><span class="line"></span><br><span class="line">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span><br></pre></td></tr></table></figure>
+
+<p>注意，摘要可能会被 Front Matter 中的 <code>excerpt</code> 覆盖。</p>
+<h2 id="资源文件夹-Hexo"><a href="#资源文件夹-Hexo" class="headerlink" title="资源文件夹 | Hexo"></a>资源文件夹 | Hexo</h2><h3 id="全局资源文件夹"><a href="#全局资源文件夹" class="headerlink" title="全局资源文件夹"></a>全局资源文件夹</h3><p>资源（Asset）代表 <code>source</code> 文件夹中除了文章以外的所有文件，例如图片、CSS、JS 文件等。比方说，如果你的Hexo项目中只有少量图片，那最简单的方法就是将它们放在 <code>source/images</code> 文件夹中。然后通过类似于 <code>![](/images/image.jpg)</code> 的方法访问它们。</p>
+<h3 id="文章资源文件夹"><a href="#文章资源文件夹" class="headerlink" title="文章资源文件夹"></a>文章资源文件夹</h3><p>对于那些想要更有规律地提供图片和其他资源以及想要将他们的资源分布在各个文章上的人来说，Hexo也提供了更组织化的方式来管理资源。这个稍微有些复杂但是管理资源非常方便的功能可以通过将 <code>config.yml</code> 文件中的 <code>post_asset_folder</code> 选项设为 <code>true</code> 来打开。</p>
+<figure class="highlight yaml"><figcaption><span>_config.yml</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>当资源文件管理功能打开后，Hexo将会在你每一次通过 <code>hexo new [layout] &lt;title&gt;</code> 命令创建新文章时自动创建一个文件夹。这个资源文件夹将会有与这个文章文件一样的名字。将所有与你的文章有关的资源放在这个关联文件夹中之后，你可以通过相对路径来引用它们，这样你就得到了一个更简单而且方便得多的工作流。</p>
+<h3 id="相对路径引用的标签插件"><a href="#相对路径引用的标签插件" class="headerlink" title="相对路径引用的标签插件"></a>相对路径引用的标签插件</h3><p>通过常规的 markdown 语法和相对路径来引用图片和其它资源可能会导致它们在存档页或者主页上显示不正确。在Hexo 2时代，社区创建了很多插件来解决这个问题。但是，随着Hexo 3 的发布，许多新的<a href="https://hexo.io/zh-cn/docs/tag-plugins#%E5%BC%95%E7%94%A8%E8%B5%84%E6%BA%90">标签插件</a>被加入到了核心代码中。这使得你可以更简单地在文章中引用你的资源。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% asset_path slug %&#125;</span><br><span class="line">&#123;% asset_img slug [title] %&#125;</span><br><span class="line">&#123;% asset_link slug [title] %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比如说：当你打开文章资源文件夹功能后，你把一个 <code>example.jpg</code> 图片放在了你的资源文件夹中，如果通过使用相对路径的常规 markdown 语法 <code>![](example.jpg)</code> ，它将 <em>不会</em> 出现在首页上。（但是它会在文章中按你期待的方式工作）</p>
+<p>正确的引用图片方式是使用下列的标签插件而不是 markdown ：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">&#123;% asset_img example.jpg This is an example image %&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过这种方式，图片将会同时出现在文章和主页以及归档页中。</p>
+<h3 id="使用-Markdown-嵌入图片"><a href="#使用-Markdown-嵌入图片" class="headerlink" title="使用 Markdown 嵌入图片"></a>使用 Markdown 嵌入图片</h3><p><a href="https://github.com/hexojs/hexo-renderer-marked">hexo-renderer-marked</a> 3.1.0 引入了一个新的选项，其允许你无需使用 <code>asset_img</code> 标签插件就可以在 markdown 中嵌入图片</p>
+<p>如需启用：</p>
+<figure class="highlight yml"><figcaption><span>_config.yml</span></figcaption><table><tr><td class="code"><pre><span class="line"><span class="attr">post_asset_folder:</span> <span class="literal">true</span></span><br><span class="line"><span class="attr">marked:</span></span><br><span class="line">  <span class="attr">prependRoot:</span> <span class="literal">true</span></span><br><span class="line">  <span class="attr">postAsset:</span> <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>启用后，资源图片将会被自动解析为其对应文章的路径。<br>例如： <code>image.jpg</code> 位置为 <code>/2020/01/02/foo/image.jpg</code> ，这表示它是 <code>/2020/01/02/foo/</code> 文章的一张资源图片， <code>![](image.jpg)</code> 将会被解析为 <code>&lt;img src=&quot;/2020/01/02/foo/image.jpg&quot;&gt;</code> 。</p>
+<h2 id="部署-Hexo"><a href="#部署-Hexo" class="headerlink" title="部署 | Hexo"></a>部署 | Hexo</h2><div class="video-container"><iframe src="https://www.youtube.com/embed/B0yVJ46CTR8" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
+
+<p>Hexo 提供了快速方便的一键部署功能，让您只需一条命令就能将网站部署到服务器上。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>在开始之前，您必须先在 <code>_config.yml</code> 中修改参数，一个正确的部署配置中至少要有 <code>type</code> 参数，例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br></pre></td></tr></table></figure>
+
+<p>您可同时使用多个 deployer，Hexo 会依照顺序执行每个 deployer。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">- type: git</span><br><span class="line">  repo:</span><br><span class="line">- type: heroku</span><br><span class="line">  repo:</span><br></pre></td></tr></table></figure>
+
+<p>关于更多的部署插件，请参考 <a href="https://hexo.io/plugins/">插件</a> 列表。</p>
+<blockquote>
+<p>缩进</p>
+<p>YAML依靠缩进来确定元素间的从属关系。因此，请确保每个deployer的缩进长度相同，并且使用空格缩进。</p>
+</blockquote>
+<h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><ol>
+<li>安装 <a href="https://github.com/hexojs/hexo-deployer-git">hexo-deployer-git</a>。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">$ npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>修改配置。</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: &lt;repository url&gt; #https://bitbucket.org/JohnSmith/johnsmith.bitbucket.io</span><br><span class="line">  branch: [branch]</span><br><span class="line">  message: [message]</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>描述</th>
+<th>默认</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>repo</code></td>
+<td>库（Repository）地址</td>
+<td></td>
+</tr>
+<tr>
+<td><code>branch</code></td>
+<td>分支名称</td>
+<td><code>gh-pages</code> (GitHub) <code>coding-pages</code> (Coding.net) <code>master</code> (others)</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td>自定义提交信息</td>
+<td><code>Site updated: &#123;&#123; now('YYYY-MM-DD HH:mm:ss') &#125;&#125;</code>)</td>
+</tr>
+<tr>
+<td><code>token</code></td>
+<td>可选的令牌值，用于认证 repo。用 <code>$</code> 作为前缀从而从环境变量中读取令牌</td>
+<td></td>
+</tr>
+</tbody></table>
+<ol start="3">
+<li>生成站点文件并推送至远程库。执行 <code>hexo clean &amp;&amp; hexo deploy</code>。</li>
+</ol>
+<ul>
+<li>除非你使用令牌或 SSH 密钥认证，否则你会被提示提供目标仓库的用户名和密码。</li>
+<li>hexo-deployer-git 并不会存储你的用户名和密码. 请使用 <a href="https://git-scm.com/docs/git-credential-cache">git-credential-cache</a> 来临时存储它们。</li>
+</ul>
+<ol start="4">
+<li>登入 Github&#x2F;BitBucket&#x2F;Gitlab，请在库设置（Repository Settings）中将默认分支设置为<code>_config.yml</code>配置中的分支名称。稍等片刻，您的站点就会显示在您的Github Pages中。</li>
+</ol>
+]]></content>
+  </entry>
+  <entry>
+    <title>关于Hexo s显示正常但Hexo d后网页端没有样式的问题</title>
+    <url>/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h3 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h3><p>hexo s在本地server打开正常显示， 部署到gitee后通过网址访问却发现主题更换了，但没有样式。<br> 折腾一会发现有两个属性值需要修改，而且需要根据自己实际网站目录准确配置</p>
+<h3 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h3><img src="/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/20200813162824713.jpg" class="lazyload placeholder" data-srcset="/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/20200813162824713.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">注意点：</span><br><span class="line">（1）.文件里里有注释提示 如果你的博客项目放在一个子目录中，那root就是子目录</span><br><span class="line">（2）.冒号后面要加一个空格</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><blockquote>
+<p>检查配置的url 和root 地址是否正确，Gitee Pages上生成的链接为url 地址</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url: https://~.gitee.io/blog</span><br><span class="line">root: /blog/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url: https://~.gitee.io</span><br><span class="line">root:</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>排除第一种可能，可能是缓存问题。清除浏览器缓存，或者<code>hexo c</code>之后重新上传部署</p>
+</li>
+<li><p>这些都没有找回样式，那就等待，</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>前端面试题</title>
+    <url>/river-blog/2022/03/28/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
+    <content><![CDATA[<h2 id="前端-2021大厂面试高频"><a href="#前端-2021大厂面试高频" class="headerlink" title="前端-2021大厂面试高频"></a>前端-2021大厂面试高频</h2><h3 id="问：聊聊Vue-的双向数据绑定，Model-如何改变View，View-又是如何改变Model-的"><a href="#问：聊聊Vue-的双向数据绑定，Model-如何改变View，View-又是如何改变Model-的" class="headerlink" title="问：聊聊Vue 的双向数据绑定，Model 如何改变View，View 又是如何改变Model 的"></a>问：聊聊Vue 的双向数据绑定，Model 如何改变View，View 又是如何改变Model 的</h3><p>答：1、从 M 到 V 的映射（Data Binding），这样可以大量节省你人肉来 update View 的代码<br>2、从 V 到 M 的事件监听（DOM Listeners），这样你的 Model 会随着 View 触发事件而改变</p>
+<h3 id="问：call-和apply-的区别是什么，哪个性能更好一些-？"><a href="#问：call-和apply-的区别是什么，哪个性能更好一些-？" class="headerlink" title="问：call 和apply 的区别是什么，哪个性能更好一些.？"></a>问：call 和apply 的区别是什么，哪个性能更好一些.？</h3><p>答：1.Function.prototype.apply 和 Function.prototype.call 的作用是一样的，区别在于传入参数的不同；<br>2.第一个参数都是，指定函数体内 this 的指向；<br>3.3 第二个参数开始不同，apply 是传入带下标的集合，数组或者类数组，apply 把它传给函数作为参数，call 从第二个开始传入的参数是不固定的，都会传给函数作为参数。<br>4.call 比 apply 的性能要好，平常可以多用 call, call 传入参数的格式正是内部所需要的格式</p>
+<h3 id="问：介绍HTTPS-握手过程？"><a href="#问：介绍HTTPS-握手过程？" class="headerlink" title="问：介绍HTTPS 握手过程？"></a>问：介绍HTTPS 握手过程？</h3><p>答：1、clientHello<br>2、SeverHello<br>3、客户端回应<br>4、服务器的最后回应</p>
+<h3 id="问：Promise-构造函数是同步执行还是异步执行，那么then-方法呢？"><a href="#问：Promise-构造函数是同步执行还是异步执行，那么then-方法呢？" class="headerlink" title="问：Promise 构造函数是同步执行还是异步执行，那么then 方法呢？"></a>问：Promise 构造函数是同步执行还是异步执行，那么then 方法呢？</h3><p>答：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">const</span> promise = <span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">1</span>)</span><br><span class="line">    <span class="title function_">resolve</span>()</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">2</span>)&#125;)promise.<span class="title function_">then</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">3</span>)&#125;)<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<p>执行结果是：1243，promise 构造函数是同步执行的，then 方法是异步执行的</p>
+<h3 id="问：React-x2F-Vue-项目时为什么要在列表组件中写key，其作用是什么"><a href="#问：React-x2F-Vue-项目时为什么要在列表组件中写key，其作用是什么" class="headerlink" title="问：React &#x2F; Vue 项目时为什么要在列表组件中写key，其作用是什么"></a>问：React &#x2F; Vue 项目时为什么要在列表组件中写key，其作用是什么</h3><p>答：key 是给每一个 vnode 的唯一 id,可以依靠 key,更准确,更快的拿到 oldVnode 中对应的 vnode 节点</p>
+<h3 id="问：关于async-x2F-await、promise和setTimeout执行顺序"><a href="#问：关于async-x2F-await、promise和setTimeout执行顺序" class="headerlink" title="问：关于async&#x2F;await、promise和setTimeout执行顺序"></a>问：关于async&#x2F;await、promise和setTimeout执行顺序</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">async1</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;async1 start&#x27;</span>);</span><br><span class="line">	<span class="keyword">await</span> <span class="title function_">async2</span>();</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;asnyc1 end&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">async2</span>(<span class="params"></span>) &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;async2&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;script start&#x27;</span>);</span><br><span class="line"><span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;setTimeOut&#x27;</span>);</span><br><span class="line">&#125;, <span class="number">0</span>);</span><br><span class="line"><span class="title function_">async1</span>();</span><br><span class="line"><span class="keyword">new</span> <span class="title class_">Promise</span>(<span class="keyword">function</span> (<span class="params">reslove</span>) &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;promise1&#x27;</span>);</span><br><span class="line">	<span class="title function_">reslove</span>();</span><br><span class="line">&#125;).<span class="title function_">then</span>(<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">	<span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;promise2&#x27;</span>);</span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;script end&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>答：执行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">script start</span><br><span class="line">async1 start</span><br><span class="line">async2</span><br><span class="line">promise1</span><br><span class="line">script end</span><br><span class="line">asnyc1 end</span><br><span class="line">promise2</span><br><span class="line">setTimeOut</span><br></pre></td></tr></table></figure>
+
+<p>首先，我们先来了解一下基本概念：</p>
+<hr>
+<p>JavaScript的事件分两种，宏任务(macro-task)和微任务(micro-task)</p>
+<ul>
+<li>宏任务：包括整体代码script，setTimeout，setInterval</li>
+<li>微任务：Promise.then(非new Promise)，process.nextTick(node中)</li>
+<li>事件的执行顺序，<code>是先执行宏任务，然后执行微任务</code>，这个是基础，任务可以有同步任务和异步任务，同步的进入主线程，异步的进入Event Table并注册函数，异步事件完成后，会将回调函数放入Event Queue中(<code>宏任务和微任务是不同的Event Queue</code>)，同步任务执行完成后，会从Event Queue中读取事件放入主线程执行，回调函数中可能还会包含不同的任务，因此会循环执行上述操作。</li>
+</ul>
+<p>注意：  setTimeOut并不是直接的把你的回掉函数放进上述的异步队列中去，而是在定时器的时间到了之后，把回掉函数放到执行异步队列中去。如果此时这个队列已经有很多任务了，那就排在他们的后面。这也就解释了为什么setTimeOut为什么不能精准的执行的问题了。setTimeOut执行需要满足两个条件：</p>
+<blockquote>
+<ol>
+<li>主进程必须是空闲的状态，如果到时间了，主进程不空闲也不会执行你的回掉函数 </li>
+<li>这个回掉函数需要等到插入异步队列时前面的异步函数都执行完了，才会执行</li>
+</ol>
+</blockquote>
+<p> 上面是比较官方的解释，说一下自己的理解吧：</p>
+<blockquote>
+<p>了解了什么是宏任务和微任务，就好理解多了，首先执行 宏任务 &#x3D;&gt; 微任务的Event Queue &#x3D;&gt; 宏任务的Event Queue</p>
+</blockquote>
+<hr>
+<p>promise、async&#x2F;await</p>
+<ol>
+<li>首先，new Promise是同步的任务，会被放到主进程中去立即执行。而.then()函数是异步任务会放到异步队列中去，那什么时候放到异步队列中去呢？当你的promise状态结束的时候，就会立即放进异步队列中去了。</li>
+<li>带async关键字的函数会返回一个promise对象，如果里面没有await，执行起来等同于普通函数；如果没有await，async函数并没有很厉害是不是</li>
+<li>await 关键字要在 async 关键字函数的内部，await  写在外面会报错；await如同他的语意，就是在等待，等待右侧的表达式完成。此时的await会让出线程，阻塞async内后续的代码，先去执行async外的代码。等外面的同步代码执行完毕，才会执行里面的后续代码。就算await的不是promise对象，是一个同步函数，也会等这样操作</li>
+</ol>
+<p>步入正题：</p>
+<img src="/river-blog/2022/03/28/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E9%A2%98/20190322161332450.png" class="lazyload placeholder" data-srcset="/river-blog/2022/03/28/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E9%A2%98/20190322161332450.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+<p> 根据图片显示我们来整理一下流程：</p>
+<p>1、执行<code>console.log(&#39;script start&#39;)</code>，输出<code>script start</code>；<br> 2、执行setTimeout，是一个异步动作，放入宏任务异步队列中；<br> 3、执行<code>async1()</code>，输出<code>async1 start</code>，继续向下执行；<br> 4、执行<code>async2()</code>，输出<code>async2</code>，并返回了一个promise对象，await让出了线程，把返回的promise加入了微任务异步队列，所以<code>async1()</code>下面的代码也要等待上面完成后继续执行;<br> 5、执行 <code>new Promise</code>，输出<code>promise1</code>，然后将<code>resolve</code>放入微任务异步队列；<br> 6、执行<code>console.log(&#39;script end&#39;)</code>，输出<code>script end</code>；<br> 7、到此同步的代码就都执行完成了，然后去微任务异步队列里去获取任务<br> 8、接下来执行<code>resolve（async2返回的promise返回的）</code>，输出了<code>async1 end</code>。<br> 9、然后执行<code>resolve（new Promise的）</code>，输出了<code>promise2</code>。<br> 10、最后执行<code>setTimeout</code>，输出了<code>settimeout</code>。</p>
+<h3 id="问：下面的代码打印什么内容，为什么？"><a href="#问：下面的代码打印什么内容，为什么？" class="headerlink" title="问：下面的代码打印什么内容，为什么？"></a>问：下面的代码打印什么内容，为什么？</h3><figure class="highlight js"><table><tr><td class="code"><pre><span class="line"><span class="keyword">var</span> b = <span class="number">10</span>;</span><br><span class="line">(<span class="keyword">function</span> <span class="title function_">b</span>(<span class="params"></span>)&#123;</span><br><span class="line">    b = <span class="number">20</span>;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(b);</span><br><span class="line">    &#125;)();</span><br></pre></td></tr></table></figure>
+
+<p>答：</p>
+<figure class="highlight js"><table><tr><td class="code"><pre><span class="line">ƒ <span class="title function_">b</span>(<span class="params"></span>)&#123;</span><br><span class="line">    b = <span class="number">20</span>;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(b);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先函数声明比变量要高，其次 b &#x3D; 20 没有 var 获取其他，说明是 window 最外层定义的变量。<br>js 作用域中，先找最近的 那就是 b fn ，直接打印了，如果 b &#x3D; 20 有 var 那就是打印 20</p>
+<h3 id="问：HTTPS-握手过程中，客户端如何验证证书的合法性"><a href="#问：HTTPS-握手过程中，客户端如何验证证书的合法性" class="headerlink" title="问：HTTPS 握手过程中，客户端如何验证证书的合法性"></a>问：HTTPS 握手过程中，客户端如何验证证书的合法性</h3><p>答：1.校验证书的颁发机构是否受客户端信任。<br>2.通过 CRL 或 OCSP 的方式校验证书是否被吊销。<br>3.3 对比系统时间，校验证书是否在有效期内。<br>4.通过校验对方是否存在证书的私钥，判断证书的网站域名是否与证书颁发的域名一致。</p>
+<h2 id="基础篇"><a href="#基础篇" class="headerlink" title="基础篇"></a>基础篇</h2><h3 id="⼀、HTML、HTTP、web综合问题"><a href="#⼀、HTML、HTTP、web综合问题" class="headerlink" title="⼀、HTML、HTTP、web综合问题"></a>⼀、HTML、HTTP、web综合问题</h3><h4 id="问：前端需要注意哪些SEO"><a href="#问：前端需要注意哪些SEO" class="headerlink" title="问：前端需要注意哪些SEO"></a>问：前端需要注意哪些SEO</h4><p>答：</p>
+<ul>
+<li>合理的 <code>title</code> 、 <code>description</code> 、 <code>keywords</code> ：搜索对着三项的权重逐个减小， <code>title</code> 值强调重点即可，重要关键词出现不要超过2次，⽽且要靠前，不同页面 <code>title</code> 要有所不同； <code>description</code> 把⻚⾯内容⾼度概括，⻓度合适，不可过分堆砌关键词，不同⻚⾯ <code>description</code> 有所不同； <code>keywords</code> 列举出重要关键词即可</li>
+<li>语义化的 <code>HTML</code> 代码，符合W3C规范：语义化代码让搜索引擎容易理解⽹⻚</li>
+<li>重要内容 <code>HTML</code> 代码放在最前：搜索引擎抓取 <code>HTML</code> 顺序是从上到下，有的搜索引擎对抓取⻓度有限制，保证重要内容⼀定会被抓取</li>
+<li>重要内容不要⽤ <code>js</code> 输出：爬⾍不会执⾏js获取内容</li>
+<li>少⽤ <code>iframe</code> ：搜索引擎不会抓取 <code>iframe</code> 中的内容</li>
+<li>⾮装饰性图⽚必须加 <code>alt</code></li>
+<li>提⾼⽹站速度：⽹站速度是搜索引擎排序的⼀个重要指标</li>
+</ul>
+<h4 id="问：介绍⼀下你对浏览器内核的理解？"><a href="#问：介绍⼀下你对浏览器内核的理解？" class="headerlink" title="问：介绍⼀下你对浏览器内核的理解？"></a>问：介绍⼀下你对浏览器内核的理解？</h4><p>答：</p>
+<ul>
+<li>主要分成两部分：渲染引擎( <code>layout engineer</code> 或 <code>Rendering Engine</code> )和 <code>JS</code> 引擎</li>
+<li>渲染引擎：负责取得⽹⻚的内容（ <code>HTML</code> 、 <code>XML</code> 、图像等等）、整理讯息（例如加⼊ <code>CSS</code> 等），以及计算⽹⻚的显示⽅式，然后会输出⾄显示器或打印机。浏览器的内核的不同对于⽹⻚的语法解释会有不同，所以渲染的效果也不相同。所有⽹⻚浏览器、电⼦邮件客户端以及其它需要编辑、显示⽹络内容的应⽤程序都需要内核</li>
+<li><code>JS</code> 引擎则：解析和执⾏ <code>javascript</code> 来实现⽹⻚的动态效果</li>
+<li>最开始渲染引擎和 <code>JS</code> 引擎并没有区分的很明确，后来JS引擎越来越独⽴，内核就倾向于只指渲染引擎</li>
+</ul>
+<h4 id="问：浏览器是怎么对-HTML5-的离线储存资源进⾏管理和加载的呢"><a href="#问：浏览器是怎么对-HTML5-的离线储存资源进⾏管理和加载的呢" class="headerlink" title="问：浏览器是怎么对 HTML5 的离线储存资源进⾏管理和加载的呢"></a>问：浏览器是怎么对 HTML5 的离线储存资源进⾏管理和加载的呢</h4><p>答：</p>
+<ul>
+<li>在线的情况下，浏览器发现 <code>html</code> 头部有 <code>manifest</code> 属性，它会请求 <code>manifest</code> ⽂件，如果是第⼀次访问 <code>app</code> ，那么浏览器就会根据manifest⽂件的内容下载相应的资源并且进⾏离线存储。如果已经访问过 <code>app</code> 并且资源已经离线存储了，那么浏览器就会使⽤离线的资源加载⻚⾯，然后浏览器会对⽐新的 <code>manifest</code> ⽂件与旧的 <code>manifest</code> ⽂件，如果⽂件没有发⽣改变，就不做任何操作，如果⽂件改变了，那么就会重新下载⽂件中的资源并进⾏离线存储。</li>
+<li>离线的情况下，浏览器就直接使⽤离线存储的资源。</li>
+</ul>
+<h4 id="问：iframe有那些缺点？"><a href="#问：iframe有那些缺点？" class="headerlink" title="问：iframe有那些缺点？"></a>问：iframe有那些缺点？</h4><p>答：</p>
+<ul>
+<li><code>iframe</code> 会阻塞主⻚⾯的 <code>Onload</code> 事件</li>
+<li>搜索引擎的检索程序⽆法解读这种⻚⾯，不利于 <code>SEO</code></li>
+<li><code>iframe</code> 和主⻚⾯共享连接池，⽽浏览器对相同域的连接有限制，所以会影响⻚⾯的并⾏加载</li>
+<li>使⽤ <code>iframe</code> 之前需要考虑这两个缺点。如果需要使⽤ <code>iframe</code> ，最好是通过 <code>javascript</code> 动态给 <code>iframe</code> 添加 <code>src</code> 属性值，这样可以绕开以上两个问题</li>
+</ul>
+<h4 id="问：WEB标准以及W3C标准是什么"><a href="#问：WEB标准以及W3C标准是什么" class="headerlink" title="问：WEB标准以及W3C标准是什么?"></a>问：WEB标准以及W3C标准是什么?</h4><p>答：标签闭合、标签⼩写、不乱嵌套、使⽤外链 <code>css</code> 和 <code>js</code> 、结构⾏为表现的分离</p>
+<h4 id="问：⾏内元素有哪些？块级元素有哪些？-空-void-元素有那些？⾏内元-素和块级元素有什么区别？"><a href="#问：⾏内元素有哪些？块级元素有哪些？-空-void-元素有那些？⾏内元-素和块级元素有什么区别？" class="headerlink" title="问：⾏内元素有哪些？块级元素有哪些？ 空(void)元素有那些？⾏内元 素和块级元素有什么区别？"></a>问：⾏内元素有哪些？块级元素有哪些？ 空(void)元素有那些？⾏内元 素和块级元素有什么区别？</h4><p>答：</p>
+<ul>
+<li>⾏内元素有： <code>a b span img input select strong</code></li>
+<li>块级元素有： <code>div ul ol li dl dt dd h1 h2 h3 h4… p</code></li>
+<li>空元素： <code>&lt;br&gt; &lt;hr&gt; &lt;img&gt; &lt;input&gt; &lt;link&gt; &lt;meta&gt;</code></li>
+<li>⾏内元素不可以设置宽⾼，不独占⼀⾏</li>
+<li>块级元素可以设置宽⾼，独占⼀⾏</li>
+</ul>
+<h4 id="问：HTML5-为什么只需要写-lt-DOCTYPE-HTML-gt"><a href="#问：HTML5-为什么只需要写-lt-DOCTYPE-HTML-gt" class="headerlink" title="问：HTML5 为什么只需要写 &lt;!DOCTYPE HTML&gt;"></a>问：HTML5 为什么只需要写 &lt;!DOCTYPE HTML&gt;</h4><p>答：</p>
+<ul>
+<li><code>HTML5</code> 不基于 <code>SGML</code> ，因此不需要对 <code>DTD</code> 进⾏引⽤，但是需要 <code>doctype</code> 来规范浏览器的⾏为</li>
+<li>⽽ <code>HTML4.01</code> 基于 <code>SGML</code> ,所以需要对 <code>DTD</code> 进⾏引⽤，才能告知浏览器⽂档所使⽤的⽂档类型</li>
+</ul>
+<h3 id="⼆、CSS部分"><a href="#⼆、CSS部分" class="headerlink" title="⼆、CSS部分"></a>⼆、CSS部分</h3><h4 id="问：css-sprite是什么-有什么优缺点"><a href="#问：css-sprite是什么-有什么优缺点" class="headerlink" title="问：css sprite是什么,有什么优缺点"></a>问：css sprite是什么,有什么优缺点</h4><p>答：</p>
+<ul>
+<li>概念：将多个⼩图⽚拼接到⼀个图⽚中。通过 <code>background-position</code> 和元素尺⼨调节需要显示的背景图案。</li>
+<li>优点：<ul>
+<li>减少 <code>HTTP</code> 请求数，极⼤地提⾼⻚⾯加载速度</li>
+<li>增加图⽚信息重复度，提⾼压缩⽐，减少图⽚⼤⼩</li>
+<li>更换⻛格⽅便，只需在⼀张或⼏张图⽚上修改颜⾊或样式即可实现</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>图⽚合并麻烦</li>
+<li>维护麻烦，修改⼀个图⽚可能需要从新布局整个图⽚，样式</li>
+</ul>
+</li>
+</ul>
+<h4 id="问：display、float、position的关系"><a href="#问：display、float、position的关系" class="headerlink" title="问：display、float、position的关系"></a>问：display、float、position的关系</h4><p>答：</p>
+<ul>
+<li>如果 <code>display</code> 取值为 <code>none</code> ，那么 <code>position</code> 和 <code>float</code> 都不起作⽤，这种情况下元素不产⽣框</li>
+<li>否则，如果 <code>position</code> 取值为 <code>absolute</code> 或者 <code>fixed</code> ，框就是绝对定位的， <code>float</code> 的计算值为 <code>none</code> ， <code>display</code> 根据下⾯的表格进⾏调整。</li>
+<li>否则，如果 <code>float</code> 不是 <code>none</code> ，框是浮动的， <code>display</code> 根据下表进⾏调整</li>
+<li>否则，如果元素是根元素， <code>display</code> 根据下表进⾏调整</li>
+<li>其他情况下 <code>display</code> 的值为指定值</li>
+<li>总结起来：<strong>绝对定位、浮动、根元素都需要调整 <code>display</code></strong></li>
+</ul>
+<h4 id="问：为什么要初始化CSS样式"><a href="#问：为什么要初始化CSS样式" class="headerlink" title="问：为什么要初始化CSS样式?"></a>问：为什么要初始化CSS样式?</h4><p>答：</p>
+<ul>
+<li>因为浏览器的兼容问题，不同浏览器对有些标签的默认值是不同的，如果没对 <code>CSS</code> 初始化往往会出现浏览器之间的⻚⾯显示差异。</li>
+<li>当然，初始化样式会对 <code>SEO</code> 有⼀定的影响，但⻥和熊掌不可兼得，但⼒求影响最⼩的情况下初始化</li>
+</ul>
+<h4 id="问：CSS优先级算法如何计算？"><a href="#问：CSS优先级算法如何计算？" class="headerlink" title="问：CSS优先级算法如何计算？"></a>问：CSS优先级算法如何计算？</h4><p>答：</p>
+<ul>
+<li>优先级就近原则，同权重情况下样式定义最近者为准</li>
+<li>载⼊样式以最后载⼊的定位为准</li>
+<li>优先级为: <code>!important &gt; id &gt; class &gt; tag</code> ; <code>!important</code> ⽐ 内联优先级⾼</li>
+</ul>
+<h4 id="问：谈谈浮动和清除浮动"><a href="#问：谈谈浮动和清除浮动" class="headerlink" title="问：谈谈浮动和清除浮动"></a>问：谈谈浮动和清除浮动</h4><p>答：浮动的框可以向左或向右移动，直到他的外边缘碰到包含框或另⼀个浮动框的边框为⽌。由于浮动框不在⽂档的普通流中，所以⽂档的普通流的块框表现得就像浮动框不存在⼀样。浮动的块框会漂浮在⽂档普通流的块框上</p>
+<h4 id="问：⾏内元素float-left后是否变为块级元素？"><a href="#问：⾏内元素float-left后是否变为块级元素？" class="headerlink" title="问：⾏内元素float:left后是否变为块级元素？"></a>问：⾏内元素float:left后是否变为块级元素？</h4><p>答：⾏内元素设置成浮动之后变得更加像是 <code>inline-block</code> （⾏内块级元素，设置成这个属性的元素会同时拥有⾏内和块级的特性，最明显的不同是它的默认宽度不是 <code>100%</code> ），这时候给⾏内元素设置 <code>padding-top</code> 和 <code>padding-bottom</code> 或者 <code>width</code> 、 <code>height</code> 都是有效果的</p>
+<h4 id="问：CSS不同选择器的权重-CSS层叠的规则"><a href="#问：CSS不同选择器的权重-CSS层叠的规则" class="headerlink" title="问：CSS不同选择器的权重(CSS层叠的规则)"></a>问：CSS不同选择器的权重(CSS层叠的规则)</h4><p>答：</p>
+<ul>
+<li><code>！important</code> 规则最重要，⼤于其它规则</li>
+<li>⾏内样式规则，加 <code>1000</code></li>
+<li>对于选择器中给定的各个 <code>ID</code> 属性值，加 <code>100</code></li>
+<li>对于选择器中给定的各个类属性、属性选择器或者伪类选择器，加 <code>10</code></li>
+<li>对于选择其中给定的各个元素标签选择器，加1</li>
+<li>如果权值⼀样，则按照样式规则的先后顺序来应⽤，顺序靠后的覆盖靠前的规则</li>
+</ul>
+<h4 id="问：列出你所知道可以改变⻚⾯布局的属性"><a href="#问：列出你所知道可以改变⻚⾯布局的属性" class="headerlink" title="问：列出你所知道可以改变⻚⾯布局的属性"></a>问：列出你所知道可以改变⻚⾯布局的属性</h4><p>答：<code>position</code> 、 <code>display</code> 、 <code>float</code> 、 <code>width</code> 、 <code>height</code> 、 <code>margin</code> 、 <code>padding</code> 、<code>top</code> 、 <code>left</code> 、 <code>right</code> 、</p>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>推荐几款免费且不限流量的全球 CDN</title>
+    <url>/river-blog/2023/02/07/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/</url>
+    <content><![CDATA[<p>推荐几个免费的且不限流量的 CDN，包括<code>jsDelivr</code> <code>Statically</code> <code>GitHack</code> 全球通用，可以存储些网站的静态资源，然后引用 CDN 地址，优化网站的访问速度。</p>
+<span id="more"></span>
+
+<h2 id="jsDelivr"><a href="#jsDelivr" class="headerlink" title="jsDelivr"></a>jsDelivr</h2><p>官网地址：<a href="https://www.jsdelivr.com/">https://www.jsdelivr.com</a> 没梯子访问可能有点慢，不过 CDN 的节点是很快的 可以引用的资源包括 NPM、github、wordpress 的所有资源，github 可以是任意体积小于 50M 的仓库，具体使用参考官网，有介绍，或者看下面的介绍</p>
+<h3 id="NPM"><a href="#NPM" class="headerlink" title="NPM"></a>NPM</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">//加载在npm上托管的任何项目</span><br><span class="line">https://cdn.jsdelivr.net/npm/package@version/file</span><br><span class="line"></span><br><span class="line">//加载jQuery v3.2.1</span><br><span class="line">https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//使用版本范围而不是特定版本</span><br><span class="line">https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js</span><br><span class="line">https://cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//完全省略版本以获取最新版本</span><br><span class="line">//你不应该在生产中使用它</span><br><span class="line">https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//将“.min”添加到任何JS / CSS文件中以获得缩小版本</span><br><span class="line">//如果一个不存在，我们将为您生成它</span><br><span class="line">https://cdn.jsdelivr.net/npm/jquery@3.2.1/src/core.min.js</span><br><span class="line"></span><br><span class="line">//省略文件路径以获取默认文件</span><br><span class="line">https://cdn.jsdelivr.net/npm/jquery@3.2</span><br><span class="line"></span><br><span class="line">//在末尾添加/以获取目录列表</span><br><span class="line">https://cdn.jsdelivr.net/npm/jquery/</span><br></pre></td></tr></table></figure>
+
+<h3 id="Github"><a href="#Github" class="headerlink" title="Github"></a>Github</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">//加载任何GitHub版本，提交或分支</span><br><span class="line">//注意：我们建议将npm用于支持它的项目</span><br><span class="line">https://cdn.jsdelivr.net/gh/user/repo@version/file</span><br><span class="line"></span><br><span class="line">//任意Github仓库</span><br><span class="line">//主分支</span><br><span class="line">https://cdn.jsdelivr.net/gh/liub1934/LB-Blog@master/wp-content/themes/Memory/style.css</span><br><span class="line">//版本分支</span><br><span class="line">https://cdn.jsdelivr.net/gh/liub1934/LB-Blog@630440b51d272219117ca7fe34ec5ee4e005e8a9/wp-content/themes/Memory/style.css</span><br><span class="line"></span><br><span class="line">//加载jQuery v3.2.1</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//使用版本范围而不是特定版本</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery@3.2/dist/jquery.min.js</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery@3/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//完全省略版本以获取最新版本</span><br><span class="line">//你不应该在生产中使用它</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//将“.min”添加到任何JS / CSS文件中以获得缩小版本</span><br><span class="line">//如果一个不存在，我们将为您生成它</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery@3.2.1/src/core.min.js</span><br><span class="line"></span><br><span class="line">//在末尾添加/以获取目录列表</span><br><span class="line">https://cdn.jsdelivr.net/gh/jquery/jquery/</span><br></pre></td></tr></table></figure>
+
+<h3 id="wordpress"><a href="#wordpress" class="headerlink" title="wordpress"></a>wordpress</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">//从WordPress.org插件SVN repo加载任何插件</span><br><span class="line">https://cdn.jsdelivr.net/wp/plugins/project/tags/version/file</span><br><span class="line"></span><br><span class="line">//加载一个确切的版本</span><br><span class="line">https://cdn.jsdelivr.net/wp/plugins/wp-slimstat/tags/4.6.5/wp-slimstat.js</span><br><span class="line"></span><br><span class="line">//加载最新版本</span><br><span class="line">//你不应该在生产中使用它</span><br><span class="line">https://cdn.jsdelivr.net/wp/plugins/wp-slimstat/trunk/wp-slimstat.js</span><br><span class="line"></span><br><span class="line">//从WordPress.org主题SVN repo加载任何主题</span><br><span class="line">https://cdn.jsdelivr.net/wp/themes/project/version/file</span><br><span class="line"></span><br><span class="line">//加载一个确切的版本</span><br><span class="line">https://cdn.jsdelivr.net/wp/themes/twenty-eightteen/1.7/assets/js/html5.js</span><br><span class="line"></span><br><span class="line">//将“.min”添加到任何JS / CSS文件中以获得缩小版本</span><br><span class="line">//如果一个不存在，我们将为您生成它</span><br><span class="line">https://cdn.jsdelivr.net/wp/themes/twenty-eightteen/1.7/assets/js/html5.min.js</span><br></pre></td></tr></table></figure>
+
+<h2 id="Statically"><a href="#Statically" class="headerlink" title="Statically"></a>Statically</h2><p>官网地址：<a href="https://www.statically.io/">https://www.statically.io</a><br>轻松地从 GitHub &#x2F; GitLab &#x2F; Bitbucket 加载您的项目 没有流量限制或限制。<br>文件通过超快速全球 CDN 提供。 在 URL（不是分支）中使用特定标记或提交哈希。<br>根据 URL 永久缓存文件。 除 master 分支外，文件在浏览器中缓存 1 年。 具体用法：</p>
+<h3 id="GitHub-CDN"><a href="#GitHub-CDN" class="headerlink" title="GitHub CDN"></a>GitHub CDN</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">https://cdn.statically.io/gh/:user/:repo/:tag/:file</span><br></pre></td></tr></table></figure>
+
+<h3 id="GitLab-CDN"><a href="#GitLab-CDN" class="headerlink" title="GitLab CDN"></a>GitLab CDN</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">https://cdn.statically.io/gl/:user/:repo/:tag/:file</span><br></pre></td></tr></table></figure>
+
+<h3 id="Bitbucket-CDN"><a href="#Bitbucket-CDN" class="headerlink" title="Bitbucket CDN"></a>Bitbucket CDN</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">https://cdn.statically.io/bb/:user/:repo/:tag/:file</span><br></pre></td></tr></table></figure>
+
+<h3 id="WordPress-CDN"><a href="#WordPress-CDN" class="headerlink" title="WordPress CDN"></a>WordPress CDN</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">https://cdn.statically.io/wp/c/:version/wp-includes/:file</span><br><span class="line">https://cdn.statically.io/wp/p/:plugin_name/:version/:file</span><br><span class="line">https://cdn.statically.io/wp/t/:theme_name/:version/:file</span><br></pre></td></tr></table></figure>
+
+<h3 id="Imgpx-CDN"><a href="#Imgpx-CDN" class="headerlink" title="Imgpx CDN"></a>Imgpx CDN</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">https://cdn.statically.io/img/:image_url</span><br></pre></td></tr></table></figure>
+
+<h3 id="Favicons-CDN"><a href="#Favicons-CDN" class="headerlink" title="Favicons CDN"></a>Favicons CDN</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">https://cdn.statically.io/favicons/:favicon_url</span><br></pre></td></tr></table></figure>
+
+<h3 id="举个栗子"><a href="#举个栗子" class="headerlink" title="举个栗子"></a>举个栗子</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">//从GitHub 加载jQuery的生产文件</span><br><span class="line">https://cdn.statically.io/gh/jquery/jquery-dist/master/dist/jquery.min.js</span><br><span class="line"></span><br><span class="line">//和Bootstrap CSS</span><br><span class="line">https://cdn.statically.io/gh/twbs/bootstrap/v4-dev/dist/css/bootstrap.min.css</span><br><span class="line"></span><br><span class="line">//或者来自WordPress.org SVN的WordPress核心文件</span><br><span class="line">https://cdn.statically.io/wp/c/latest/wp-includes/css/dashicons.min.css</span><br><span class="line"></span><br><span class="line">//或者自己的任意仓库</span><br><span class="line">//主分支</span><br><span class="line">https://rawcdn.githack.com/liub1934/LB-Blog/master/wp-content/themes/Memory/emoji/xiaodianshi/baiyan.png</span><br><span class="line"></span><br><span class="line">//版本分支</span><br><span class="line">https://rawcdn.githack.com/liub1934/LB-Blog/8806f440d3f9a7cc3e6125d7d75564e40262c6a8/wp-content/themes/Memory/emoji/xiaodianshi/baiyan.png</span><br></pre></td></tr></table></figure>
+
+<h2 id="GitHack"><a href="#GitHack" class="headerlink" title="GitHack"></a>GitHack</h2><p>直接从 GitHub，Bitbucket 或 GitLab 提供原始文件<br>官网地址：<a href="http://raw.githack.com/">http://raw.githack.com/</a> 具体用法和上面的<code>Statically</code>很类似</p>
+<h3 id="github"><a href="#github" class="headerlink" title="github"></a>github</h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">//主分支</span><br><span class="line">https://rawcdn.githack.com/liub1934/LB-Blog/master/wp-content/themes/Memory/emoji/xiaodianshi/baiyan.png</span><br><span class="line"></span><br><span class="line">//版本分支</span><br><span class="line">https://rawcdn.githack.com/liub1934/LB-Blog/8806f440d3f9a7cc3e6125d7d75564e40262c6a8/wp-content/themes/Memory/emoji/xiaodianshi/baiyan.png</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>以上几款免费的 CDN，都是不限流量的，所以可以用于个人的项目，公司的项目请酌情考虑使用，<br>可能会存在流量过大导致出现一些问题。<br>一些比较：<br>1、jsDelivr：图片资源过多可能会出现一些问题，例如本站的表情图片，之前用的一直是 jsDelivr，经常出现一大片的表情加载失败的情况，也可能和我表情图片 CDN 用的是 master 主版本的原因，因为经常提交有变动，本站其他的静态资源一切都好。<br>2、Statically：和 jsDelivr 的问题一样，过多的表情图片有时候个别的几个表情加载不出来，通过地址直接打开页面 503 报错。不过 Statically 有个<code>imgpx</code>可以优化图片，具体参考：<a href="https://www.statically.io/imgpx">https://www.statically.io/imgpx</a><br>3、GitHack：最后过多的图标表情的问题还是通用 GitHack 加载解决了，没有出现上面所说的部分表情图片加载失败的情况。上面的文件都是通过<a href="https://www.cloudflare.com/">CloudFlare</a>的 CDN 提供，CloudFlare 国外很有名，资源应该也相对稳定些。</p>
+]]></content>
+      <categories>
+        <category>运维</category>
+      </categories>
+  </entry>
+  <entry>
+    <title>注销各大招聘网站账号</title>
+    <url>/river-blog/2022/03/30/%E6%B3%A8%E9%94%80%E5%90%84%E5%A4%A7%E6%8B%9B%E8%81%98%E7%BD%91%E7%AB%99%E8%B4%A6%E5%8F%B7/</url>
+    <content><![CDATA[<p>1、前程无忧：网页版，安全中心，注销，验证码验证，最方便</p>
+<p>2、实习僧：手机APP操作，点击【我的-右上角设置-账号设置-账号注销】，完成，不用等</p>
+<p>3、拉勾：须手机APP操作，点击【我的-设置-我的账号-注销账号】，14个自然日审核等待期</p>
+<p>4、智联：须手机APP操作，点击【我的-右上角设置-账号注销】，15个自然日审核等待期</p>
+<p>5、boss直聘：须手机APP操作，点击【我的-右上角设置-帮助与反馈-账号管理-注销账号】，15个工作日审核等待期</p>
+]]></content>
+  </entry>
+</search>

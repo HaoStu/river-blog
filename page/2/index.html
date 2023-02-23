@@ -11,7 +11,7 @@
   <!-- Global site tag (gtag.js) - Google Analytics -->
 
 
-  <title>关于Hexo s显示正常但Hexo d后网页端没有样式的问题 | 好好的江河笔记</title>
+  <title>好好的江河笔记</title>
 
   <link rel="icon" type="image/x-icon, image/vnd.microsoft.icon" href="/river-blog/favicon.ico">
   <link rel="stylesheet" href="https://at.alicdn.com/t/font_1911880_c1nvbyezg17.css">
@@ -180,7 +180,7 @@
       <main class="main" id="pjax-container">
         <!-- 头部导航 -->
         
-<header class="header   " 
+<header class="header no-swiper " 
   id="navHeader"
   style="position: fixed;
   left: 0; top: 0; z-index: 10;width: 100%;"
@@ -473,192 +473,104 @@
 </header>
         <!-- 内容区域 -->
         
- <!-- prismjs 代码高亮 -->
- 
 
-
-<div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -1;"></div>
-
-
-  <!-- 文章详情页顶部图片和标题 -->
-
-
-
-
-<div class="post-detail-header" id="thumbnail_canvas" style="background-repeat: no-repeat; background-size: cover; 
-  background-position: center center;position: relative;background-image:url('/river-blog/medias/15.jpg')">
-  <div class="post-detail-header-mask"></div>
-  <canvas id="header_canvas"style="position:absolute;bottom:0;pointer-events:none;"></canvas>
+<div id="l_main">
+  <div class="l_content">
+    <!-- 自定义的内容 -->
+    
   
-  <div class="post-detail-header_info-box">
-    <div class="title-box">
-      <span class="title">
-        关于Hexo s显示正常但Hexo d后网页端没有样式的问题
-      </span>
-    </div>
-    
-    
-      
-        <span class="post-detail-header_date">
-          <i class="fas fa-calendar"></i> 发表于：2023-02-08 |
-        </span>
-      
 
-      
-        <span class="post-detail-header_categories">
-          <i class="iconfont iconbookmark1"></i> 分类：
-          
-            <a href="/river-blog/categories/%E5%89%8D%E7%AB%AF/" class="post-detail-header_category">
-              前端
+    <!-- 首页座右铭 -->
+    
+    <!-- 首页公告 -->
+    
+    <!-- 首页文章置顶 -->
+    
+
+
+
+    <div class="bg-floor" id="home-bg-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
+    <!-- 每一篇文章卡片 -->
+    <!-- hash算法 -->
+
+<section class="posts">
+  
+    
+    <article class="post reveal" style="flex-direction: row-reverse;   ">
+      <div class="post-main">
+        <div class="post-info">
+          <div class="post-time">
+            <i class="fas fa-clock" aria-hidden="true"></i>
+            <span class="post-time">2022-03-28</span>
+          </div>
+          <div class="post-title">
+            <a class="post-title-link" href="/river-blog/2022/03/28/myFirstDiary/">myFirstDiary</a>
+          </div>
+          <div class="post-meta">
+            <div class="post-tags">
+              <!-- 文章详情页的标签 -->
+
+            </div>
+            <div class="post-categories">
+              <!-- 文章详情页的分类 -->
+
+
+            </div>
+          </div>
+          <div class="post-img-mobile">
+            <a href="/river-blog/2022/03/28/myFirstDiary/" style="background-size: cover; 
+              background-position: center center;">
+              <img class="lazyload lazyload placeholder" src="https://pic2.zhimg.com/80/v2-63bbdb5b76b8d349ad35ff4281efbd37_1440w.webp" class="lazyload placeholder" data-srcset="https://pic2.zhimg.com/80/v2-63bbdb5b76b8d349ad35ff4281efbd37_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
             </a>
-          
-        </span>
-      
+          </div>
+          <div class="post-content">
+            <h2 id="指令-Hexo"><a href="#指令-Hexo" class="headerlink" title="指令 | Hexo"></a>指令 | Hexo</h2><div class="video-container"><iframe src="https://www.youtube.com/embed/mgdXi5npArQ" frameborder="0" loading="lazy" allowfullscreen></iframe></div>
 
-      
-        <div class="post-detail-header_wordcount">
-          <span class="totalcount">
-            <i class="fas fa-file-text-o"></i> 字数统计: 202 |
-          </span>
-  
-          <span class="min2read">
-            <i class="fas fa-clock"></i> 阅读时长: 1分钟 |
-          </span>
-  
-          
-            <span class="reading">
-              <i class="fas fa-eye"></i> 阅读量：<span id="busuanzi_value_page_pv"></span>
-            </span>
-          
+<h3 id="init"><a href="#init" class="headerlink" title="init"></a>init</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo init [folder]</span><br></pre></td></tr></table></figure>
+
+<p>新建一个网站。如果没有设置 <code>folder</code> ，Hexo 默认在目前的文件夹建立网站。</p>
+<p>本命令相当于执行了以下几步：</p>
+<ol>
+<li>Git clone <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo-starter">hexo-starter</a> 和 <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo-theme-landscape">hexo-theme-landscape</a> 主题到当前目录或指定目录。</li>
+<li>使用 <a target="_blank" rel="noopener" href="https://classic.yarnpkg.com/lang/en/">Yarn 1</a>、<a target="_blank" rel="noopener" href="https://pnpm.js.org/">pnpm</a> 或 <a target="_blank" rel="noopener" href="https://docs.npmjs.com/cli/install">npm</a> 包管理器下载依赖（如有已安装多个，则列在前面的优先）。npm 默认随 <a href="/docs/#Install-Node-js">Node.js</a> 安装。</li>
+</ol>
+          </div>
         </div>
-      
-    
-  </div>
-  
-  
-    <script src="/river-blog/js/bubble/bubble.js"></script>
-  
-</div>
-
-
-
-
-
-<div class="post-detail-content post-row" 
-  style="padding-top: 0px;">
-  <div class="main-content">
-    <article class="post post-detail">
-      <div class="post-content">
-        <h3 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h3><p>hexo s在本地server打开正常显示， 部署到gitee后通过网址访问却发现主题更换了，但没有样式。<br> 折腾一会发现有两个属性值需要修改，而且需要根据自己实际网站目录准确配置</p>
-<h3 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h3><img src="/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/20200813162824713.jpg" class="lazyload placeholder" data-srcset="/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/20200813162824713.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">注意点：</span><br><span class="line">（1）.文件里里有注释提示 如果你的博客项目放在一个子目录中，那root就是子目录</span><br><span class="line">（2）.冒号后面要加一个空格</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><blockquote>
-<p>检查配置的url 和root 地址是否正确，Gitee Pages上生成的链接为url 地址</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">url: https://~.gitee.io/blog</span><br><span class="line">root: /blog/</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">url: https://~.gitee.io</span><br><span class="line">root:</span><br></pre></td></tr></table></figure>
-</blockquote>
-</li>
-<li><p>排除第一种可能，可能是缓存问题。清除浏览器缓存，或者<code>hexo c</code>之后重新上传部署</p>
-</li>
-<li><p>这些都没有找回样式，那就等待，</p>
-</li>
-</ul>
-
+        <div class="post-more">
+          <a href="/river-blog/2022/03/28/myFirstDiary/">
+            <i class="iconfont iconmore" pointer style="float: right;  " title="阅读更多"></i>
+          </a>
+        </div>
       </div>
-      <div class="post-tags-categories">
-        
+      <div class="post-img">
+        <a href="/river-blog/2022/03/28/myFirstDiary/" style="background-size: cover; 
+          background-position: center center;">
+          <img class="lazyload lazyload placeholder" src="https://pic2.zhimg.com/80/v2-63bbdb5b76b8d349ad35ff4281efbd37_1440w.webp" class="lazyload placeholder" data-srcset="https://pic2.zhimg.com/80/v2-63bbdb5b76b8d349ad35ff4281efbd37_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+        </a>
       </div>
-      
-        <div class="copyright">
-  <ul class="post-copyright">
-    <li class="post-copyright-author">
-    <strong>作者:  </strong>dhh</a>
-    </li>
-    <li class="post-copyright-link">
-    <strong>文章链接:  </strong>
-    <a href="/river-blog/2023/02/08/关于Hexo-s显示正常但Hexo-d后网页端没有样式的问题/" target="_blank" title="关于Hexo s显示正常但Hexo d后网页端没有样式的问题">http://haostu.github.io/river-blog/2023/02/08/关于Hexo-s显示正常但Hexo-d后网页端没有样式的问题/</a>
-    </li>
-    <li class="post-copyright-license">
-      <strong>版权声明:   </strong>
-      本网站所有文章除特别声明外,均采用 <a rel="license" href="https://creativecommons.org/licenses/by-nc-nd/4.0/" target="_blank" title="Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)">CC BY-NC-ND 4.0</a>
-      许可协议。转载请注明出处!
-    </li>
-  </ul>
-<div>
-      
     </article>
-    <!-- 上一篇文章和下一篇文章 -->
-    
-      <!-- 文章详情页的上一页和下一页 -->
-<div class="post-nav">
-
-
-
   
-  <div class="post-nav-prev post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/river-blog/medias/7.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/7.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+</section>
+    <!-- 翻页 -->
+    
+  <!-- <nav class="page-nav">
+    <a class="extend prev" rel="prev" href="/river-blog/">上一页</a><a class="page-number" href="/river-blog/">1</a><span class="page-number current">2</span>
+  </nav> -->
+  <div class="page-nav">
+    
+      <a href="/river-blog/"
+         class="page-nav-pre">
+         <i class="fas fa-angle-left"></i><span class="ml-5">上一页</span>
+      </a>
+    
+    <div class="page-info">
+        <div class="page-info-text">2 / 2</div>
     </div>
-    <a href="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/" class="post-nav-link">
-      <div class="title">
-        <i class="fas fa-angle-left"></i> 上一篇:
-        <div class="title-text">SQL进阶之约束、索引</div>
-      </div>
-      
-      <!-- <div class="content">
-        什么是SQL约束？SQL约束用于规定表中的数据规则。如果存在违反约束的数据行为，行为会被约束终止。约束可以在创建表时规定
-      </div> -->
-    </a>
-  </div>
-
-
-
-  
-  <div class="post-nav-next post-nav-item">
-    <div class="post-nav-img" style="background-size: cover; 
-      background-position: center center;">
-      <img class="lazyload lazyload placeholder" src="/river-blog/medias/1.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/1.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" src="" alt="">
-    </div>
-    <a href="/river-blog/2023/02/07/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/" class="post-nav-link">
-      <div class="title">
-        下一篇: <i class="fas fa-angle-right"></i>
-        <div class="title-text">推荐几款免费且不限流量的全球 CDN</div>
-      </div>
-      <!-- <div class="content">
-        推荐几个免费的且不限流量的 CDN，包括jsDelivr Statically GitHack 全球通用，可以存储些网站
-      </div> -->
-    </a>
-  </div>
-
-</div>
-
-    
-    
-
-    <!-- 打赏 -->
-    
-
-    <!-- 分享 -->
-    
-    
-    <!-- 评论 -->
-    <!-- 评论 -->
-
-  <div id="myComment">
     
   </div>
 
-<!-- comment script in themes\hexo-theme-bamboo\layout\_partial\scripts\index.ejs -->
-
-
   </div>
 
-  <!-- 目录 -->
   
 <aside id='l_side'>
   
@@ -674,29 +586,7 @@
   <div class="layout_sticky">    
     
       
-<section class="widget side_toc">
-  
-  <header>
-    
-      <i style="color: " class="fas fa-list fa-fw" aria-hidden="true"></i><span class='name'>本文目录</span>
-    
-  </header>
-
-
-  <div class='content'>
-    <div class="toc-main">
-      <div class="toc-content">
-        <!-- <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="toc-text">问题：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%EF%BC%9A"><span class="toc-text">解决：</span></a></li></ol> -->
-        <div class="toc"></div>
-      </div>
-    </div>
-  </div>
-</section>
-<!-- 手机端目录按钮 -->
-<div id="toc-mobile-btn">
-  <i class="fas fa-list-ul" aria-hidden="true"></i>
-</div>
-
+      
       
   <section class="widget side_recent_post">
     
@@ -719,30 +609,9 @@
             
 
             <div class="post-img-box">
-              <a href="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/" class="post-img " style="background-size: cover; 
+              <a href="/river-blog/2023/02/08/Hexo%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%AD%89%E9%97%AE%E9%A2%98/" class="post-img " style="background-size: cover; 
                 background-position: center center;">
-                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/river-blog/medias/7.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/7.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
-              </a>
-            </div>
-            <div class="post-date-title">
-              <div>
-                
-                  <span class="post-date">02-11</span>
-                
-              </div>
-              <a class="post-title" href="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/">SQL进阶之约束、索引</a>
-            </div>
-          </div>
-        
-          <div class="aside-list-item">
-            
-            
-            
-
-            <div class="post-img-box">
-              <a href="/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/" class="post-img " style="background-size: cover; 
-                background-position: center center;">
-                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/river-blog/medias/15.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/15.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/river-blog/medias/5.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/5.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
               </a>
             </div>
             <div class="post-date-title">
@@ -751,7 +620,7 @@
                   <span class="post-date">02-08</span>
                 
               </div>
-              <a class="post-title" href="/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/">关于Hexo s显示正常但Hexo d后网页端没有样式的问题</a>
+              <a class="post-title" href="/river-blog/2023/02/08/Hexo%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%AD%89%E9%97%AE%E9%A2%98/">Hexo部署博客没有样式等问题</a>
             </div>
           </div>
         
@@ -761,18 +630,18 @@
             
 
             <div class="post-img-box">
-              <a href="/river-blog/2023/02/07/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/" class="post-img " style="background-size: cover; 
+              <a href="/river-blog/2022/12/19/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/" class="post-img " style="background-size: cover; 
                 background-position: center center;">
-                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/river-blog/medias/1.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/1.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic2.zhimg.com/80/v2-e22aaad20d20634f506f57fff0fcbc17_1440w.webp" class="lazyload placeholder" data-srcset="https://pic2.zhimg.com/80/v2-e22aaad20d20634f506f57fff0fcbc17_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
               </a>
             </div>
             <div class="post-date-title">
               <div>
                 
-                  <span class="post-date">02-07</span>
+                  <span class="post-date">12-19</span>
                 
               </div>
-              <a class="post-title" href="/river-blog/2023/02/07/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/">推荐几款免费且不限流量的全球 CDN</a>
+              <a class="post-title" href="/river-blog/2022/12/19/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/">推荐几款免费且不限流量的全球 CDN</a>
             </div>
           </div>
         
@@ -784,7 +653,7 @@
             <div class="post-img-box">
               <a href="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/" class="post-img " style="background-size: cover; 
                 background-position: center center;">
-                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/river-blog/medias/4.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/4.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic3.zhimg.com/v2-a5267dfbf175991d4b3a69b41f3f678a_b.jpg" class="lazyload placeholder" data-srcset="https://pic3.zhimg.com/v2-a5267dfbf175991d4b3a69b41f3f678a_b.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
               </a>
             </div>
             <div class="post-date-title">
@@ -805,7 +674,7 @@
             <div class="post-img-box">
               <a href="/river-blog/2022/12/06/hello-world/" class="post-img " style="background-size: cover; 
                 background-position: center center;">
-                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="/river-blog/medias/7.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/7.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic3.zhimg.com/v2-a5267dfbf175991d4b3a69b41f3f678a_b.jpg" class="lazyload placeholder" data-srcset="https://pic3.zhimg.com/v2-a5267dfbf175991d4b3a69b41f3f678a_b.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
               </a>
             </div>
             <div class="post-date-title">
@@ -818,168 +687,118 @@
             </div>
           </div>
         
+          <div class="aside-list-item">
+            
+            
+            
+
+            <div class="post-img-box">
+              <a href="/river-blog/2022/10/09/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" style="width:100%;height:100%;object-fit:cover;" data-src="https://pic2.zhimg.com/80/v2-e22aaad20d20634f506f57fff0fcbc17_1440w.webp" class="lazyload placeholder" data-srcset="https://pic2.zhimg.com/80/v2-e22aaad20d20634f506f57fff0fcbc17_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                
+                  <span class="post-date">10-09</span>
+                
+              </div>
+              <a class="post-title" href="/river-blog/2022/10/09/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/">SQL进阶之约束、索引</a>
+            </div>
+          </div>
+        
       </div>
     </div>
   </section>
+
+      
+      <section class="widget side_webinfo">
+  
+  <header>
+    
+      <i style="color: " class="fas fa-chart-line fa-fw" aria-hidden="true"></i><span class='name'>站点信息</span>
+    
+  </header>
+
+
+  <div class='content'>
+    <div class="webinfo">
+      
+        <div class="webinfo-item">
+          <div>文章数目：</div>
+          <div>11 篇</div>
+        </div>
+      
+
+      
+        <div class="webinfo-item">
+          <div>已运行时间：</div>
+          <div id="webinfo-runtime-count" publish_date="03/24/2020 21:34:09"></div>
+        </div>
+        <script>
+          var BirthDay = new Date(new Date('2022/03/28'));
+          var today = new Date();
+          var timeold = (today.getTime() - BirthDay.getTime());
+          var daysold = Math.floor(timeold / (24 * 60 * 60 * 1000));
+          document.getElementById('webinfo-runtime-count').innerHTML = daysold + ' 天';
+        </script>
+      
+
+
+      
+
+      
+
+      
+
+      
+    </div>
+  </div>
+</section>
+      
+  
+    <div class="widget welcome" id="welcome" style="order: -1;background: #fff">
+      <header>
+        
+          <a style="color: blue" target="_blank" rel="noopener" href='https://api.vvhan.com/api/ip'><i class="fas fa-envelope fa-fw" aria-hidden="true"></i><span class='name'>欢迎</span></a>
+        
+      </header>
+      <div class="content">
+        <img src="https://api.vvhan.com/api/ip" class="lazyload placeholder" data-srcset="https://api.vvhan.com/api/ip" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="IP天气签名档API" width="100%">
+      </div>
+  </div>
+  
+    <div class="widget testWidget" id="testWidget" style="order: -2;background: #fff">
+      <header>
+        
+          <a style="color: #d63130" target="_blank" rel="noopener" href='http://weibo.com'><i class="fab fa-weibo fa-fw" aria-hidden="true"></i><span class='name'>微博热搜</span></a>
+        
+      </header>
+      <div class="content">
+         <div id="myWeibo">
+<!-- 如果不要滚动，则去掉 vue-seamless-scroll标签就行了，这个插件使用cdn向左向右滚动好像有问题 -->
+<vue-seamless-scroll :data="content" :class-option="classOption" class="warp" > <div class="weibo-container" v-for="(item, index) in content" :key="index"> <div class="left"> <div class="order" :class="{ red: index<=2 }">{{index + 1}}</div> <div class="name"><a :href="item.url" target="_blank">{{item.title}}</a></div> </div> <div class="hot">{{item.hot}}</div> </div> </vue-seamless-scroll> </div>
+<script src="/river-blog/weibo/index.js"></script> <link href="/river-blog/weibo/index.css" rel="stylesheet"> 
+      </div>
+  </div>
+  
 
     
   </div>
 </aside>
 
-
-  <!-- 图片放大 Wrap images with fancybox support -->
-  <script src="/river-blog/js/wrapImage.js"></script>
 </div>
+<!-- 花瓣和雪花飘落 -->
+<!-- 雪花和花瓣特效 -->
 
-<!-- 文章详情页背景图 -->
-<div id="appBgSwiper" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"
-	:style="{'background-color': bgColor ? bgColor : 'transparent'}">
-	<transition-group tag="ul" :name="names">
-		<li v-for='(image,index) in img' :key='index' v-show="index === mark" class="bg-swiper-box">
-			<img :src="image" class="bg-swiper-img no-lazy">
-		</li>
-	</transition-group>
-</div>
-<script>
-	var vm = new Vue({
-		el: '#appBgSwiper',
-		data: {
-			names: '' || 'fade' || 'fade', // translate-fade fade
-			mark: 0,
-			img: [],
-			bgColor: '',
-			time: null
-		},
-		methods: {   //添加方法
-			change(i, m) {
-				if (i > m) {
-					// this.names = 'fade';
-				} else if (i < m) {
-					// this.names = 'fade';
-				} else {
-					return;
-				}
-				this.mark = i;
-			},
-			prev() {
-				// this.names = 'fade';
-				this.mark--;
-				if (this.mark === -1) {
-					this.mark = 3;
-					return
-				}
-			},
-			next() {
-				// this.names = 'fade';
-				this.mark++;
-				if (this.mark === this.img.length) {
-					this.mark = 0;
-					return
-				}
-			},
-			autoPlay() {
-				// this.names = 'fade';
-				this.mark++;
-				if (this.mark === this.img.length) {
-					this.mark = 0;
-					return
-				}
-			},
-			play() {
-				let bgImgDelay = '' || '180000'
-				let delay = parseInt(bgImgDelay) || 180000;
-				this.time = setInterval(this.autoPlay, delay);
-			},
-			enter() {
-				clearInterval(this.time);
-			},
-			leave() {
-				this.play();
-			}
-		},
-		created() {
-			this.play()
-		},
-		beforeDestroy() {
-			clearInterval(this.time);
-		},
-		mounted() {
-			let prop = '' || '';
-			let isImg = prop.includes('.bmp') || prop.includes('.jpg') || prop.includes('.png') || prop.includes('.tif') || prop.includes('.gif') || prop.includes('.pcx') || prop.includes('.tga') || prop.includes('.exif') || prop.includes('.fpx') || prop.includes('.psd') || prop.includes('.cdr') || prop.includes('.pcd') || prop.includes('.dxf') || prop.includes('.ufo') || prop.includes('.eps') || prop.includes('.ai') || prop.includes('.raw') || prop.includes('.WMF') || prop.includes('.webp') || prop.includes('.jpeg') || prop.includes('http://') || prop.includes('https://')
-			if (isImg) {
-				let img = prop.split(',');
-				let configRoot = '/river-blog/'
-				let arrImg = [];
-				img.forEach(el => {
-					var Expression = /http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
-					var objExp = new RegExp(Expression);
-
-					if (objExp.test(el)) {
-						// http or https
-						arrImg.push(el);
-					} else {
-						// 非http or https开头
-						// 本地文件
-						let firstStr = el.charAt(0);
-						if (firstStr == '/') {
-							el = el.substr(1); // 删除第一个字符 '/',因为 configRoot最后一个字符为 /
-						}
-						el = configRoot + el;
-						arrImg.push(el);
-					}
-				})
-				this.img = arrImg;
-			} else {
-				this.bgColor = prop;
-			}
-		}
-	})
-</script>
-
-<style>
-	.bg-swiper-box {
-		position: absolute;
-		display: block;
-		width: 100%;
-		height: 100%;
-	}
-
-	.bg-swiper-img {
-		object-fit: cover;
-		width: 100%;
-		height: 100%;
-	}
-</style>
-
-
-
-
-  <script>
-  function loadMermaid() {
-    if (document.getElementsByClassName('mermaid').length) {
-      if (window.mermaidJsLoad) mermaid.init()
-      else {
-        loadScript('https://unpkg.com/mermaid/dist/mermaid.min.js').then(() => {
-          window.mermaidJsLoad = true
-          mermaid.initialize({
-            theme: 'default',
-          })
-          if ('true') {
-            mermaid.init();
-          }
-        })
-      }
-    }
-  };
-  document.addEventListener("DOMContentLoaded", function () {
-    loadMermaid();
-  })
-
-  document.addEventListener('pjax:complete', function () {
-    loadMermaid();
-  })
   
-</script>
+    <script src="/river-blog/js/falling/sakura.js"></script>
+  
+
+
+
+<!-- 灯笼 -->
 
 
       </main>
@@ -1007,7 +826,7 @@
       if (isDark) {
         this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
       } else {
-        this.FISH_COLOR = '' || '#42b983';
+        this.FISH_COLOR = '' || 'rgba(66, 185, 133, 0.8)';
       }
     },
     setParameters: function () {
@@ -1476,8 +1295,6 @@
 <!-- 设置导航背景 -->
 <script>
   let setHeaderClass = () => {
-    const headerMenuTransparent = true;
-    if (!headerMenuTransparent) { return; }
     const nav = $('#navHeader');
     const navTop = nav.outerHeight();
     const winTop = $(window).scrollTop();

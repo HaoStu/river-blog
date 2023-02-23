@@ -1,6 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>Hexo部署博客没有样式等问题</title>
+    <url>/river-blog/2023/02/08/Hexo%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%AD%89%E9%97%AE%E9%A2%98/</url>
+    <content><![CDATA[<h3 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h3><p>hexo s在本地server打开正常显示， 部署到gitee后通过网址访问却发现主题更换了，但没有样式。<br> 折腾一会发现有两个属性值需要修改，而且需要根据自己实际网站目录准确配置</p>
+<h3 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h3><img src="/river-blog/2023/02/08/Hexo%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%AD%89%E9%97%AE%E9%A2%98/20200813162824713.jpg" class="lazyload placeholder" data-srcset="/river-blog/2023/02/08/Hexo%E9%83%A8%E7%BD%B2%E5%8D%9A%E5%AE%A2%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%AD%89%E9%97%AE%E9%A2%98/20200813162824713.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">注意点：</span><br><span class="line">（1）.文件里里有注释提示 如果你的博客项目放在一个子目录中，那root就是子目录</span><br><span class="line">（2）.冒号后面要加一个空格</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><blockquote>
+<p>检查配置的url 和root 地址是否正确，Gitee Pages上生成的链接为url 地址</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url: https://~.gitee.io/blog</span><br><span class="line">root: /blog/</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url: https://~.gitee.io</span><br><span class="line">root:</span><br></pre></td></tr></table></figure>
+</blockquote>
+</li>
+<li><p>排除第一种可能，可能是缓存问题。清除浏览器缓存，或者<code>hexo c</code>之后重新上传部署</p>
+</li>
+<li><p>这些都没有找回样式，那就等待，</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>前端</category>
+      </categories>
+  </entry>
+  <entry>
     <title>Java日常开发的21个坑</title>
     <url>/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近看了极客时间的《Java业务开发常见错误100例》，再结合平时踩的一些代码坑，写写总结，希望对大家有帮助，感谢阅读~</p>
@@ -319,8 +345,418 @@
       </categories>
   </entry>
   <entry>
+    <title>SQL进阶之子句、关键字和操作符</title>
+    <url>/river-blog/2022/09/15/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E5%AD%90%E5%8F%A5%E3%80%81%E5%85%B3%E9%94%AE%E5%AD%97%E5%92%8C%E6%93%8D%E4%BD%9C%E7%AC%A6/</url>
+    <content><![CDATA[<h2 id="WHERE子句"><a href="#WHERE子句" class="headerlink" title="WHERE子句"></a>WHERE子句</h2><p>WHERE子句用于提取满足指定标准的记录。</p>
+<ul>
+<li>WHERE子句的语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name,column_nameFROM table_nameWHERE column_name operator <span class="keyword">value</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>WHERE子句的示例：</li>
+</ul>
+<p>​        执行如下SQL语句，从Websites表中选取国家为CN的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites <span class="keyword">WHERE</span> country<span class="operator">=</span><span class="string">&#x27;CN&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>WHERE子句中的文本字段和数值字段。</li>
+</ul>
+<p>​        在SQL语句的WHERE子句中，文本字段使用单引号来环绕文本值（大部分数据库系统也接受双引号）。在上个示例中’CN’文本字段使用了单引号。如果是数值字段，请不要使用引号。</p>
+<p>​        执行如下SQL语句，从Websites表中选取id为1的网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites <span class="keyword">WHERE</span> id<span class="operator">=</span><span class="number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>WHERE子句中的运算符。</li>
+</ul>
+<p>​        下方的运算符可以在WHERE字句中使用。</p>
+<table>
+<thead>
+<tr>
+<th><strong>运算符</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&#x3D;</td>
+<td>等于</td>
+</tr>
+<tr>
+<td>&lt;&gt;</td>
+<td>不等于<br/><strong>说明：</strong>在SQL的一些版本中，该操作符可被写成!&#x3D;。</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>大于</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>小于</td>
+</tr>
+<tr>
+<td>&gt;&#x3D;</td>
+<td>大于等于</td>
+</tr>
+<tr>
+<td>&lt;&#x3D;</td>
+<td>小于等于</td>
+</tr>
+<tr>
+<td>BETWEEN</td>
+<td>在某个范围内</td>
+</tr>
+<tr>
+<td>LIKE</td>
+<td>搜索某种模式</td>
+</tr>
+<tr>
+<td>IN</td>
+<td>指定针对某个列的多个可能值</td>
+</tr>
+</tbody></table>
+<h2 id="AND和OR运算符"><a href="#AND和OR运算符" class="headerlink" title="AND和OR运算符"></a>AND和OR运算符</h2><p>AND和OR运算符用于基于一个以上的条件对记录进行过滤。</p>
+<p>如果第一个条件和第二个条件都成立，则AND运算符显示一条记录。</p>
+<p>如果第一个条件和第二个条件中只要有一个成立，则OR运算符显示一条记录。</p>
+<ul>
+<li>AND运算符的示例：</li>
+</ul>
+<p>​        执行如下SQL语句，从Websites表中选取国家为CN且rank排名大于50的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites <span class="keyword">WHERE</span> country<span class="operator">=</span><span class="string">&#x27;CN&#x27;</span><span class="keyword">AND</span> rank <span class="operator">&gt;</span> <span class="number">50</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>OR运算符的示例：</li>
+</ul>
+<p>​        执行如下SQL语句，从Websites表中选取国家为USA或者CN的所有客户。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites <span class="keyword">WHERE</span> country<span class="operator">=</span><span class="string">&#x27;USA&#x27;</span><span class="keyword">OR</span> country<span class="operator">=</span><span class="string">&#x27;CN&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>结合AND和OR运算符的示例：</li>
+</ul>
+<p>​        执行如下SQL语句，从Websites表中选取rank排名大于15且国家为CN或USA的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites <span class="keyword">WHERE</span> rank <span class="operator">&gt;</span> <span class="number">15</span> <span class="keyword">AND</span> (country<span class="operator">=</span><span class="string">&#x27;CN&#x27;</span> <span class="keyword">OR</span> country<span class="operator">=</span><span class="string">&#x27;USA&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="ORDER-BY关键字"><a href="#ORDER-BY关键字" class="headerlink" title="ORDER BY关键字"></a>ORDER BY关键字</h2><p>ORDER BY关键字用于对结果集按照一个列或者多个列进行排序。</p>
+<p>ORDER BY关键字默认按照升序对记录进行排序。如果需要按照降序对记录进行排序，您可以使用DESC关键字。</p>
+<ul>
+<li>ORDER BY的语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name,column_nameFROM table_nameORDER <span class="keyword">BY</span> column_name,column_name <span class="keyword">ASC</span><span class="operator">|</span><span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ORDER BY的示例：</li>
+</ul>
+<p>​        执行如下SQL语句，从Websites表中选取所有网站，并按照rank列排序。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites <span class="keyword">ORDER</span> <span class="keyword">BY</span> rank; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ORDER BY DESC的示例：</li>
+</ul>
+<p>​        执行如下SQL语句，从Websites表中选取所有网站，并按照rank列降序排序。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites <span class="keyword">ORDER</span> <span class="keyword">BY</span> rank <span class="keyword">DESC</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>ORDER BY多列的示例：</li>
+</ul>
+<p>​        执行如下SQL语句，从Websites表中选取所有网站，并按照country和rank列排序。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites <span class="keyword">ORDER</span> <span class="keyword">BY</span> country,rank;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SELECT-TOP-LIMIT-ROWNUM子句"><a href="#SELECT-TOP-LIMIT-ROWNUM子句" class="headerlink" title="SELECT TOP, LIMIT, ROWNUM子句"></a>SELECT TOP, LIMIT, ROWNUM子句</h2><p>SELECT TOP, LIMIT, ROWNUM子句用于规定要返回的记录的数目。其中，SELECT TOP子句适用于SQL Server数据库，SELECT LIMIT子句适用于MySQL数据库，SELECT ROWNUM适用于Oracle。</p>
+<p><strong>说明：</strong>以SELECT LIMIT子句为例。</p>
+<ul>
+<li>SELECT LIMIT子句的语法。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name(s)<span class="keyword">FROM</span> table_nameLIMIT number;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>SELECT LIMIT子句的示例：</li>
+</ul>
+<p>执行如下SQL语句，从Websites表中选取选取头两条记录。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Websites LIMIT <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="LIKE操作符"><a href="#LIKE操作符" class="headerlink" title="LIKE操作符"></a>LIKE操作符</h2><p>LIKE操作符用于在WHERE子句中搜索列中的指定模式。</p>
+<ul>
+<li>LIKE操作符的语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name(s)<span class="keyword">FROM</span> table_nameWHERE column_name <span class="keyword">LIKE</span> <span class="keyword">pattern</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>LIKE操作符的示例：<ul>
+<li>执行如下SQL语句，从Websites表中选取name列以字母G开始的所有网站。</li>
+</ul>
+</li>
+</ul>
+<p>​        <strong>说明：</strong>%符号用于在模式的前后定义通配符（缺省字母）。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">LIKE</span> <span class="string">&#x27;G%&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下SQL语句，从Websites表中选取name列以字母k”结尾的所有网站。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">LIKE</span> <span class="string">&#x27;%k&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下SQL语句，从Websites表中选取name列包含模式oo的所有网站。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">LIKE</span> <span class="string">&#x27;%oo%&#x27;</span> </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>通过使用NOT关键字，您可以选取不匹配模式的记录。</li>
+</ul>
+<p>​        执行如下SQL语句，从Websites表中选取name列不包含模式oo的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">NOT</span> <span class="keyword">LIKE</span> <span class="string">&#x27;%oo%&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="通配符"><a href="#通配符" class="headerlink" title="通配符"></a>通配符</h2><p>通配符可用于替代字符串中的任何其他字符。</p>
+<p>在SQL中，通配符与SQL LIKE操作符一起使用。SQL通配符用于搜索表中的数据。</p>
+<ul>
+<li>在SQL 中，可使用以下通配符：</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th><strong>通配符</strong></th>
+<th><strong>描述</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>%</td>
+<td>替代0个或多个字符</td>
+</tr>
+<tr>
+<td>_</td>
+<td>替代一个字符</td>
+</tr>
+<tr>
+<td>[charlist]</td>
+<td>字符列中的任何单一字符</td>
+</tr>
+<tr>
+<td>[^charlist]或[!charlist]</td>
+<td>不在字符列中的任何单一字符</td>
+</tr>
+</tbody></table>
+<ul>
+<li>使用%通配符。<ul>
+<li>执行如下命令，选取url以字母https开始的所有网站。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE url <span class="keyword">LIKE</span> <span class="string">&#x27;https%&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下命令，选取url包含字母oo的所有网站。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE url <span class="keyword">LIKE</span> <span class="string">&#x27;%oo%&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用_通配符。<ul>
+<li>执行如下命令，选取name以一个任意字符开始，然后是oogle的所有网站。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">LIKE</span> <span class="string">&#x27;_oogle&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下命令，选取name以字母G开始，然后是一个任意字符，然后是字母o，然后是一个任意字符，然后是字母le的所有网站。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">LIKE</span> <span class="string">&#x27;G_o_le&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>使用[charlist]通配符。</li>
+</ul>
+<p>​        <strong>说明：</strong>MySQL中使用REGEXP或NOT REGEXP运算符（或 RLIKE 和 NOT RLIKE） 来操作正则表达式。</p>
+<ul>
+<li>执行如下命令，选取name以G、F或s开始的所有网站。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name REGEXP <span class="string">&#x27;^[GFs]&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下命令，选取name不以A到H字母开头的网站。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name REGEXP <span class="string">&#x27;^[^A-H]&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="IN操作符"><a href="#IN操作符" class="headerlink" title="IN操作符"></a>IN操作符</h2><p>IN操作符允许您在WHERE子句中规定多个值。</p>
+<ul>
+<li>IN操作符的语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name(s)<span class="keyword">FROM</span> table_nameWHERE column_name <span class="keyword">IN</span> (value1,value2,...);</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>IN操作符的示例：</li>
+</ul>
+<p>执行如下语句，选取name为Google或淘宝的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">IN</span> (<span class="string">&#x27;Google&#x27;</span>,<span class="string">&#x27;淘宝&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<h2 id="BETWEEN操作符"><a href="#BETWEEN操作符" class="headerlink" title="BETWEEN操作符"></a>BETWEEN操作符</h2><p>BETWEEN操作符选取介于两个值之间的数据范围内的值，这些值可以是数值、文本或者日期。</p>
+<ul>
+<li>BETWEEN操作符的语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name(s)<span class="keyword">FROM</span> table_nameWHERE column_name <span class="keyword">BETWEEN</span> value1 <span class="keyword">AND</span> value2;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>BETWEEN操作符的示例：</li>
+</ul>
+<p>​        执行如下语句，选取rank介于1和20之间的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE alexa <span class="keyword">BETWEEN</span> <span class="number">1</span> <span class="keyword">AND</span> <span class="number">20</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>NOT BETWEEN操作符实例。</li>
+</ul>
+<p>​        执行如下语句，选取rank不介于1和20之间的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE alexa <span class="keyword">NOT</span> <span class="keyword">BETWEEN</span> <span class="number">1</span> <span class="keyword">AND</span> <span class="number">20</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>带有IN的BETWEEN操作符实例。</li>
+</ul>
+<p>​        执行如下语句，选取rank介于1和20之间但country不为USA所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE (rank <span class="keyword">BETWEEN</span> <span class="number">1</span> <span class="keyword">AND</span> <span class="number">20</span>)<span class="keyword">AND</span> <span class="keyword">NOT</span> country <span class="keyword">IN</span> (<span class="string">&#x27;USA&#x27;</span>); </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>带有文本值的BETWEEN操作符实例。</li>
+</ul>
+<p>​        执行如下语句，选取name以介于A和H之间字母开始的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">BETWEEN</span> <span class="string">&#x27;A&#x27;</span> <span class="keyword">AND</span> <span class="string">&#x27;H&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>带有文本值的NOT BETWEEN 操作符实例。</li>
+</ul>
+<p>​        执行如下语句，选取name不介于A和H之间字母开始的所有网站。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> WebsitesWHERE name <span class="keyword">NOT</span> <span class="keyword">BETWEEN</span> <span class="string">&#x27;A&#x27;</span> <span class="keyword">AND</span> <span class="string">&#x27;H&#x27;</span>; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>带有日期值的BETWEEN 操作符实例。</li>
+</ul>
+<p>​        执行如下语句，创建一个网站访问记录表，并插入数据，然后选取date介于2016-05-10’和2016-05-14之间的所有访问记录。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">DROP</span> <span class="keyword">TABLE</span> IF <span class="keyword">EXISTS</span> `access_log`;</span><br><span class="line"></span><br><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `access_log` (  `aid` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,  `site_id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;网站id&#x27;</span>,  `count` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;0&#x27;</span> COMMENT <span class="string">&#x27;访问次数&#x27;</span>,  `<span class="type">date</span>` <span class="type">date</span> <span class="keyword">NOT</span> <span class="keyword">NULL</span>,  <span class="keyword">PRIMARY</span> KEY (`aid`)) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">10</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8; </span><br><span class="line"></span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `access_log` <span class="keyword">VALUES</span> (<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;45&#x27;</span>, <span class="string">&#x27;2016-05-10&#x27;</span>), (<span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;100&#x27;</span>, <span class="string">&#x27;2016-05-13&#x27;</span>), (<span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;230&#x27;</span>, <span class="string">&#x27;2016-05-14&#x27;</span>), (<span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;10&#x27;</span>, <span class="string">&#x27;2016-05-14&#x27;</span>), (<span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;205&#x27;</span>, <span class="string">&#x27;2016-05-14&#x27;</span>), (<span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;13&#x27;</span>, <span class="string">&#x27;2016-05-15&#x27;</span>), (<span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;220&#x27;</span>, <span class="string">&#x27;2016-05-15&#x27;</span>), (<span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;545&#x27;</span>, <span class="string">&#x27;2016-05-16&#x27;</span>), (<span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;201&#x27;</span>, <span class="string">&#x27;2016-05-17&#x27;</span>); </span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> access_logWHERE <span class="type">date</span> <span class="keyword">BETWEEN</span> <span class="string">&#x27;2016-05-10&#x27;</span> <span class="keyword">AND</span> <span class="string">&#x27;2016-05-14&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SQL别名"><a href="#SQL别名" class="headerlink" title="SQL别名"></a>SQL别名</h2><p>通过使用SQL，可以为表名称或列名称指定别名。基本上，创建别名是为了让列名称的可读性更强。</p>
+<ul>
+<li>列的SQL别名语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name <span class="keyword">AS</span> alias_nameFROM table_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>表的SQL别名语法：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name(s)<span class="keyword">FROM</span> table_name <span class="keyword">AS</span> alias_name;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>列的别名示例：<ul>
+<li>执行如下语句，指定了两个别名，一个是name列的别名，一个是country列的别名。</li>
+</ul>
+</li>
+</ul>
+<p>​        <strong>说明：</strong>如果列名称包含空格，要求使用双引号或方括号。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">AS</span> n, country <span class="keyword">AS</span> cFROM Websites; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下语句，我们把三个列（url、rank 和 country）结合在一起，并创建一个名为site_info的别名。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, CONCAT(url, <span class="string">&#x27;, &#x27;</span>, rank, <span class="string">&#x27;, &#x27;</span>, country) <span class="keyword">AS</span> site_infoFROM Websites </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>表的别名示例：</li>
+</ul>
+<p>​        执行如下语句，选取大学的所有访问记录。我们使用Websites和access_log表，并分别为它们指定表别名w和a（通过使用别名让 SQL 更简短）。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> w.name, w.url, a.count, a.date <span class="keyword">FROM</span> Websites <span class="keyword">AS</span> w, access_log <span class="keyword">AS</span> a <span class="keyword">WHERE</span> a.site_id<span class="operator">=</span>w.id <span class="keyword">and</span> w.name<span class="operator">=</span>&quot;大学&quot;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="UNION操作符"><a href="#UNION操作符" class="headerlink" title="UNION操作符"></a>UNION操作符</h2><p>UNION操作符合并两个或多个SELECT语句的结果集。</p>
+<p>请注意，UNION内部的每个SELECT语句必须拥有相同数量的列。列也必须拥有相似的数据类型。同时，每个SELECT语句中的列的顺序必须相同。</p>
+<ul>
+<li>UNION操作符的语法：</li>
+</ul>
+<p>​        <strong>说明：</strong>默认地，UNION操作符选取不同的值。如果允许重复的值，请使用 UNION ALL。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name(s) <span class="keyword">FROM</span> table1UNIONSELECT column_name(s) <span class="keyword">FROM</span> table2;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>UNION操作符的示例：</li>
+</ul>
+<p>​        执行如下语句，创建一个APP数据表，并插入数据，然后从Websites和apps表中选取所有不同的country（只有不同的值）。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `apps` (  `id` <span class="type">int</span>(<span class="number">11</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> AUTO_INCREMENT,  `app_name` <span class="type">char</span>(<span class="number">20</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;站点名称&#x27;</span>,  `url` <span class="type">varchar</span>(<span class="number">255</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span>,  `country` <span class="type">char</span>(<span class="number">10</span>) <span class="keyword">NOT</span> <span class="keyword">NULL</span> <span class="keyword">DEFAULT</span> <span class="string">&#x27;&#x27;</span> COMMENT <span class="string">&#x27;国家&#x27;</span>,  <span class="keyword">PRIMARY</span> KEY (`id`)) ENGINE<span class="operator">=</span>InnoDB AUTO_INCREMENT<span class="operator">=</span><span class="number">4</span> <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8; </span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> `apps` <span class="keyword">VALUES</span> (<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;QQ APP&#x27;</span>, <span class="string">&#x27;http://im.qq.com/&#x27;</span>, <span class="string">&#x27;CN&#x27;</span>), (<span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;微博 APP&#x27;</span>, <span class="string">&#x27;http://weibo.com/&#x27;</span>, <span class="string">&#x27;CN&#x27;</span>), (<span class="string">&#x27;3&#x27;</span>, <span class="string">&#x27;淘宝 APP&#x27;</span>, <span class="string">&#x27;https://www.taobao.com/&#x27;</span>, <span class="string">&#x27;CN&#x27;</span>); </span><br><span class="line"><span class="keyword">SELECT</span> country <span class="keyword">FROM</span> WebsitesUNIONSELECT country <span class="keyword">FROM</span> appsORDER <span class="keyword">BY</span> country;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>UNION ALL的示例：</li>
+</ul>
+<p>​        执行如下语句，从Websites和apps表中选取所有的country（也有重复的值）。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> country <span class="keyword">FROM</span> WebsitesUNION ALLSELECT country <span class="keyword">FROM</span> appsORDER <span class="keyword">BY</span> country; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>带有WHERE的UNION ALL的示例：</li>
+</ul>
+<p>​        执行如下语句，从Websites和apps表中选取所有的CN的数据（也有重复的值）。</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> country, name <span class="keyword">FROM</span> WebsitesWHERE country<span class="operator">=</span><span class="string">&#x27;CN&#x27;</span><span class="keyword">UNION</span> ALLSELECT country, app_name <span class="keyword">FROM</span> appsWHERE country<span class="operator">=</span><span class="string">&#x27;CN&#x27;</span><span class="keyword">ORDER</span> <span class="keyword">BY</span> country;</span><br></pre></td></tr></table></figure>
+
+<h2 id="SELECT-INTO语句"><a href="#SELECT-INTO语句" class="headerlink" title="SELECT INTO语句"></a>SELECT INTO语句</h2><p>SELECT INTO语句从一个表复制数据，然后把数据插入到另一个新表中。</p>
+<p><strong>注意：</strong>MySQL数据库不支持SELECT … INTO语句，但支持INSERT INTO … SELECT。</p>
+<ul>
+<li>SELECT INTO的语法：<ul>
+<li>复制所有的列插入到新表中：</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span><span class="keyword">INTO</span> newtable [<span class="keyword">IN</span> externaldb]<span class="keyword">FROM</span> table1;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>只复制希望的列插入到新表中：</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> column_name(s)<span class="keyword">INTO</span> newtable [<span class="keyword">IN</span> externaldb]<span class="keyword">FROM</span> table1;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>SELECT INTO的示例：<ul>
+<li>执行如下语句，创建Websites的备份复件。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span><span class="keyword">INTO</span> WebsitesBackupFROM Websites;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下语句，只复制一些列插入到新表中。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name, urlINTO WebsitesBackupFROM Websites;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下语句，只复制中国的网站插入到新表中。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span><span class="keyword">INTO</span> WebsitesBackup2016FROM WebsitesWHERE country<span class="operator">=</span><span class="string">&#x27;CN&#x27;</span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下语句，复制多个表中的数据插入到新表中。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> Websites.name, access_log.count, access_log.dateINTO WebsitesBackup2016FROM WebsitesLEFT <span class="keyword">JOIN</span> access_logON Websites.id<span class="operator">=</span>access_log.site_id;</span><br></pre></td></tr></table></figure>
+
+<h2 id="INSERT-INTO-SELECT语句"><a href="#INSERT-INTO-SELECT语句" class="headerlink" title="INSERT INTO SELECT语句"></a>INSERT INTO SELECT语句</h2><p>INSERT INTO SELECT语句从一个表复制数据，然后把数据插入到一个已存在的表中。目标表中任何已存在的行都不会受影响。</p>
+<ul>
+<li>INSERT INTO SELECT的语法：<ul>
+<li>从一个表中复制所有的列插入到另一个已存在的表中。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2SELECT <span class="operator">*</span> <span class="keyword">FROM</span> table1;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>只复制希望的列插入到另一个已存在的表中。</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2(column_name(s))<span class="keyword">SELECT</span> column_name(s)<span class="keyword">FROM</span> table1;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>INSERT INTO SELECT的示例：<ul>
+<li>执行如下语句，复制apps表中的数据插入到Websites表中。</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Websites (name, country)<span class="keyword">SELECT</span> app_name, country <span class="keyword">FROM</span> apps; </span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>执行如下语句，只复QQ的APP到Websites表中。</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">INSERT INTO Websites (name, country)SELECT app_name, country FROM appsWHERE id=1;</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <tags>
+        <tag>SQL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SQL进阶之约束、索引</title>
-    <url>/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/</url>
+    <url>/river-blog/2022/10/09/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/</url>
     <content><![CDATA[<h2 id="什么是SQL约束？"><a href="#什么是SQL约束？" class="headerlink" title="什么是SQL约束？"></a>什么是SQL约束？</h2><p>SQL约束用于规定表中的数据规则。如果存在违反约束的数据行为，行为会被约束终止。约束可以在创建表时规定（通过CREATE TABLE语句），或者在表创建之后规定（通过ALTER TABLE语句）。</p>
 <ul>
 <li>SQL的CREATE TABLE＋CONSTRAINT语法。</li>
@@ -471,10 +907,10 @@
 </ul>
 <p>​        假如我们有如下图两张表，Orders表中的P_Id列指向Persons表中的P_Id列。Persons表中的P_Id列是Persons表中的PRIMARY KEY。Orders表中的P_Id列是Orders表中的FOREIGN KEY。FOREIGN  KEY约束用于预防破坏表之间连接的行为。FOREIGN KEY约束也能防止非法数据插入外键列，因为它必须是它指向的那个表中的值之一。</p>
 <p><strong>Persons表</strong></p>
-<img src="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/ff3bbeb383eb4faf8839a65c8cec016f.png" class="lazyload placeholder" data-srcset="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/ff3bbeb383eb4faf8839a65c8cec016f.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+<img src="/river-blog/2022/10/09/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/ff3bbeb383eb4faf8839a65c8cec016f.png" class="lazyload placeholder" data-srcset="/river-blog/2022/10/09/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/ff3bbeb383eb4faf8839a65c8cec016f.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
 
 <p><strong>Orders表</strong></p>
-<img src="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/8b772bd13689487ea06c2ed55c20243e.png" class="lazyload placeholder" data-srcset="/river-blog/2023/02/11/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/8b772bd13689487ea06c2ed55c20243e.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
+<img src="/river-blog/2022/10/09/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/8b772bd13689487ea06c2ed55c20243e.png" class="lazyload placeholder" data-srcset="/river-blog/2022/10/09/SQL%E8%BF%9B%E9%98%B6%E4%B9%8B%E7%BA%A6%E6%9D%9F%E3%80%81%E7%B4%A2%E5%BC%95/8b772bd13689487ea06c2ed55c20243e.png" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
 
 <ul>
 <li>CREATE TABLE时的FOREIGN KEY约束的示例：<ul>
@@ -768,6 +1204,9 @@
 <p>​        执行如下SQL语句，在Persons表中插入一条记录。然后查看Person表。</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> Persons (FirstName,LastName)</span><br><span class="line"><span class="keyword">VALUES</span> (<span class="string">&#x27;Lars&#x27;</span>,<span class="string">&#x27;Monsen&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> Persons;</span><br></pre></td></tr></table></figure>
 ]]></content>
+      <tags>
+        <tag>SQL</tag>
+      </tags>
   </entry>
   <entry>
     <title>Hello World</title>
@@ -1180,32 +1619,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>关于Hexo s显示正常但Hexo d后网页端没有样式的问题</title>
-    <url>/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/</url>
-    <content><![CDATA[<h3 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h3><p>hexo s在本地server打开正常显示， 部署到gitee后通过网址访问却发现主题更换了，但没有样式。<br> 折腾一会发现有两个属性值需要修改，而且需要根据自己实际网站目录准确配置</p>
-<h3 id="解决："><a href="#解决：" class="headerlink" title="解决："></a>解决：</h3><img src="/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/20200813162824713.jpg" class="lazyload placeholder" data-srcset="/river-blog/2023/02/08/%E5%85%B3%E4%BA%8EHexo-s%E6%98%BE%E7%A4%BA%E6%AD%A3%E5%B8%B8%E4%BD%86Hexo-d%E5%90%8E%E7%BD%91%E9%A1%B5%E7%AB%AF%E6%B2%A1%E6%9C%89%E6%A0%B7%E5%BC%8F%E7%9A%84%E9%97%AE%E9%A2%98/20200813162824713.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" class=" lazyload placeholder">
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">注意点：</span><br><span class="line">（1）.文件里里有注释提示 如果你的博客项目放在一个子目录中，那root就是子目录</span><br><span class="line">（2）.冒号后面要加一个空格</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><blockquote>
-<p>检查配置的url 和root 地址是否正确，Gitee Pages上生成的链接为url 地址</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url: https://~.gitee.io/blog</span><br><span class="line">root: /blog/</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">url: https://~.gitee.io</span><br><span class="line">root:</span><br></pre></td></tr></table></figure>
-</blockquote>
-</li>
-<li><p>排除第一种可能，可能是缓存问题。清除浏览器缓存，或者<code>hexo c</code>之后重新上传部署</p>
-</li>
-<li><p>这些都没有找回样式，那就等待，</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>前端</category>
-      </categories>
-  </entry>
-  <entry>
     <title>前端面试题</title>
     <url>/river-blog/2022/03/28/%E5%89%8D%E7%AB%AF%E9%9D%A2%E8%AF%95%E9%A2%98/</url>
     <content><![CDATA[<h2 id="前端-2021大厂面试高频"><a href="#前端-2021大厂面试高频" class="headerlink" title="前端-2021大厂面试高频"></a>前端-2021大厂面试高频</h2><h3 id="问：聊聊Vue-的双向数据绑定，Model-如何改变View，View-又是如何改变Model-的"><a href="#问：聊聊Vue-的双向数据绑定，Model-如何改变View，View-又是如何改变Model-的" class="headerlink" title="问：聊聊Vue 的双向数据绑定，Model 如何改变View，View 又是如何改变Model 的"></a>问：聊聊Vue 的双向数据绑定，Model 如何改变View，View 又是如何改变Model 的</h3><p>答：1、从 M 到 V 的映射（Data Binding），这样可以大量节省你人肉来 update View 的代码<br>2、从 V 到 M 的事件监听（DOM Listeners），这样你的 Model 会随着 View 触发事件而改变</p>
@@ -1354,8 +1767,164 @@
       </categories>
   </entry>
   <entry>
+    <title>手动搭建FTP站点（Windows）</title>
+    <url>/river-blog/2022/07/19/%E6%89%8B%E5%8A%A8%E6%90%AD%E5%BB%BAFTP%E7%AB%99%E7%82%B9%EF%BC%88Windows%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="1-添加IIS以及FTP服务角色"><a href="#1-添加IIS以及FTP服务角色" class="headerlink" title="1. 添加IIS以及FTP服务角色"></a>1. 添加IIS以及FTP服务角色</h2><ol>
+<li><p>在Windows桌面的左下角单击开始图标，然后找到并单击<strong>服务器管理器</strong>。</p>
+</li>
+<li><p>在顶部导航栏，单击<strong>管理 &gt; 添加角色和功能</strong>。</p>
+</li>
+<li><p>在弹出的对话框中，保持默认配置并单击<strong>下一步</strong>至<strong>选择服务器角色</strong>页面。如果看不全可以按F11进行全屏展示。</p>
+</li>
+<li><p>选中<strong>Web 服务器（IIS）</strong>，在弹出的对话框中单击<strong>添加功能</strong>，然后单击<strong>下一步</strong>。</p>
+</li>
+<li><p>保持默认配置并单击<strong>下一步</strong>至<strong>选择角色服务</strong>页面。</p>
+</li>
+<li><p>选中<strong>IIS管理控制台</strong>以及<strong>FTP 服务器</strong>，单击<strong>下一步</strong>。</p>
+</li>
+<li><p>单击<strong>安装</strong>，然后等待安装完成后，单击<strong>关闭</strong>。</p>
+</li>
+</ol>
+<h2 id="2-创建用于访问FTP站点的Windows用户"><a href="#2-创建用于访问FTP站点的Windows用户" class="headerlink" title="2. 创建用于访问FTP站点的Windows用户"></a>2. 创建用于访问FTP站点的Windows用户</h2><p>创建Windows用户，用于访问FTP站点时的身份验证。如果您只需要匿名用户（即仅提供用户名<code>anonymous</code>或<code>ftp</code>的用户）访问FTP站点，可以跳过本步骤。</p>
+<ol>
+<li><p>在Windows桌面的左下角单击开始图标，然后找到并单击<strong>Windows 管理工具</strong>。</p>
+</li>
+<li><p>在<strong>管理工具</strong>页面，找到并双击<strong>计算机管理</strong>。</p>
+</li>
+<li><p>在左侧导航栏，选择<strong>系统工具 &gt; 本地用户和组 &gt; 用户</strong>。</p>
+</li>
+<li><p>在页面右侧的<strong>操作</strong>列，单击<strong>更多操作</strong>，然后单击<strong>新用户</strong>。</p>
+</li>
+</ol>
+<p>具体配置说明如下：</p>
+<ul>
+<li>用户名：本示例中创建一个用户名为<code>ftptest</code>的Windows用户。</li>
+<li>密码以及确认密码：输入您自定义的密码信息。</li>
+</ul>
+<p>&#x3D;&#x3D;<strong>说明</strong> 密码必须包括大写字母、小写字母和数字，否则将提示无法通过密码策略。同时，请您妥善保管密码信息，防止密码泄露产生的数据安全风险。&#x3D;&#x3D;</p>
+<ul>
+<li>密码相关设置：选中<strong>密码永不过期</strong>。（首先需取消默认的用户下次登录时须更改密码才能进行勾选）</li>
+</ul>
+<h2 id="3-设置共享文件的权限"><a href="#3-设置共享文件的权限" class="headerlink" title="3. 设置共享文件的权限"></a>3. 设置共享文件的权限</h2><p>您需要创建一个文件夹作为FTP站点共享文件的入口，该文件夹需要开放访问、修改等权限。后续各客户端访问该FTP站点时，文件传输均基于该文件夹完成。具体操作说明如下：</p>
+<ol>
+<li><p>Windows实例的磁盘中，创建一个供FTP站点使用的文件夹。本示例中，在C盘下创建一个名为ftp的文件夹。</p>
+</li>
+<li><p>右键单击ftp文件夹，然后单击<strong>属性</strong>。</p>
+</li>
+<li><p>单击<strong>安全</strong>页签，然后单击<strong>编辑</strong>。 </p>
+</li>
+<li><p>单击<strong>添加</strong>。</p>
+</li>
+<li><p>在弹出的对话框中，输入对象名称<code>ftptest</code>，然后单击<strong>检查名称</strong>。检查名称无误后，单击<strong>确定</strong>。 </p>
+</li>
+<li><p>在<strong>组或用户名</strong>区域，单击新添加的用户名<strong>ftptest</strong>，然后在<strong>ftptest 的权限</strong>区域设置权限后，单击<strong>确定</strong>。本示例中允许所有权限。您可以根据实际业务对权限的要求，自行设置权限为允许或拒绝。</p>
+</li>
+</ol>
+<h2 id="4-添加并设置FTP站点"><a href="#4-添加并设置FTP站点" class="headerlink" title="4. 添加并设置FTP站点"></a>4. 添加并设置FTP站点</h2><ol>
+<li><p>在Windows桌面的左下角单击开始图标，然后找到并单击<strong>服务器管理器</strong>。 </p>
+</li>
+<li><p>在顶部导航栏，单击<strong>工具 &gt; Internet Information Services(IIS)管理器</strong>。</p>
+</li>
+<li><p>在左侧导航栏，选择<strong>Windows实例主机名 &gt; 网站</strong>，然后在右侧<strong>操作</strong>列，单击<strong>添加 FTP 站点</strong>。</p>
+</li>
+<li><p>在弹出的对话框中，设置站点信息，然后单击<strong>下一步</strong>。</p>
+</li>
+</ol>
+<p>具体配置说明如下：</p>
+<ul>
+<li>FTP站点名称：自定义名称。例如<code>ftptest</code>。</li>
+<li>内容目录：FTP所需的共享文件夹。本文对应的是C盘中的ftp文件夹。</li>
+</ul>
+<ol start="5">
+<li>设置IP地址以及SSL证书，然后单击<strong>下一步</strong>。</li>
+</ol>
+<p>具体配置说明如下：</p>
+<ul>
+<li>IP地址：保持默认配置。</li>
+<li>SSL：不同配置项对应的说明如下。本示例中选择<strong>无</strong>，即不需要SSL加密。如果您需要保证数据传输安全且已拥有SSL证书，请根据实际的数据传输安全要求，设置为<strong>允许</strong>或<strong>需要</strong>。<ul>
+<li><strong>无</strong>：不需要SSL加密。</li>
+<li><strong>允许</strong>：允许FTP服务器支持与客户端的非SSL和SSL连接。</li>
+<li><strong>需要</strong>：需要对FTP服务器和客户端之间的通信进行SSL加密。</li>
+</ul>
+</li>
+<li>其他配置项保持默认设置。</li>
+</ul>
+<ol start="6">
+<li>设置身份验证和授权信息，然后单击<strong>完成</strong>。</li>
+</ol>
+<p>具体配置项说明如下：</p>
+<ul>
+<li>身份验证：不同选项的说明如下所示。本示例中仅选择<strong>基本</strong>，后续将通过已创建的<code>ftptest</code>用户访问FTP站点。如果您对数据传输安全没有要求，可以设置为<strong>匿名</strong>，使匿名用户支持直接访问FTP站点。<ul>
+<li><strong>匿名</strong>：允许任何仅提供用户名<code>anonymous</code>或<code>ftp</code>的用户访问内容。</li>
+<li><strong>基本</strong>：需要用户提供有效用户名和密码才能访问内容。由于基本身份验证通过网络传输未加密的密码，因此请仅在清楚客户端和FTP服务器之间的连接是安全的情况下（例如，使用安全套接字层SSL时）使用此身份验证方法。</li>
+</ul>
+</li>
+<li>授权：允许访问的范围说明如下所示。本示例中选择<strong>指定用户</strong>，并在对应的文本框中输入<code>ftptest</code>。<ul>
+<li><strong>所有用户</strong>：所有用户（不论是匿名用户还是已标识的用户）均可访问FTP站点对应的共享文件夹。</li>
+<li><strong>匿名用户</strong>：匿名用户可访问FTP站点对应的共享文件夹。</li>
+<li><strong>指定角色或用户组</strong>：仅特定角色或用户组的成员才能访问FTP站点对应的共享文件夹。需要在对应的文本框中输入角色或用户组。</li>
+<li><strong>指定用户</strong>：仅指定用户才能访问FTP站点对应的共享文件夹。需要在对应的文本框中输入用户名。</li>
+</ul>
+</li>
+<li>权限：选中<strong>读取</strong>和<strong>写入</strong>权限。</li>
+</ul>
+<p>完成后可以在IIS管理器查看到成功搭建的FTP站点。</p>
+<ol start="7">
+<li><p>配置FTP站点的防火墙。</p>
+<p>i. 在IIS管理器中，双击FTP站点名称<code>ftptest</code>，进入FTP站点的主页。</p>
+<p>ii. 双击<strong>FTP 防火墙支持</strong>。</p>
+<p>iii. 在<strong>防火墙的外部 IP 地址</strong>下的文本框中，输入Windows实例的公网IP地址。</p>
+<p>iv. 在页面右侧<strong>操作</strong>列，单击<strong>应用</strong>，然后在弹出的对话框中单击<strong>确定</strong>。</p>
+</li>
+</ol>
+<h2 id="5-设置安全组及防火墙"><a href="#5-设置安全组及防火墙" class="headerlink" title="5. 设置安全组及防火墙"></a>5. 设置安全组及防火墙</h2><p>当您在Windows实例中搭建好FTP站点后，需要在实例所属的安全组中，添加入方向规则，放行FTP服务器所需的21端口以及FTP服务器被动模式可能占用的端口范围1024~65535。</p>
+<p>有两种配置方式：</p>
+<p>（1）在Windows实例所属的安全组中，添加入方向规则，放行21端口以及1024~65535端口。</p>
+<p>（2）配置Windows实例内部的防火墙。</p>
+<p>Windows实例内部的防火墙默认为关闭状态。如果您的防火墙为开启状态，则需要放行TCP 21端口与1024~65535端口用于FTP服务。</p>
+<p>本文将采用第二种方式中的<strong>添加端口规则</strong>。</p>
+<ol>
+<li><p>在菜单栏选择 <strong>开始</strong> &gt; <strong>运行</strong>。</p>
+</li>
+<li><p>在 <strong>运行</strong> 窗口，输入<code>wf.msc</code>。单击 <strong>确定</strong>。</p>
+</li>
+<li><p>在弹出的 <strong>高级安全 Winodws 防火墙</strong> 窗口，单击 <strong>入站规则</strong>，然后单击 <strong>新建规则</strong>。</p>
+</li>
+<li><p>在弹出的新建入站规则向导窗口，选择 <strong>端口</strong>，单击 <strong>下一步</strong>。 </p>
+</li>
+<li><p>在弹出的窗口中，选择 <strong>TCP</strong>，然后添加 <strong>特定本地端口（</strong>21端口以及1024~65535端口<strong>）</strong>。单击 <strong>下一步</strong>。 </p>
+</li>
+<li><p>在弹出的窗口中，选择 <strong>允许连接</strong>。单击 <strong>下一步</strong>。 </p>
+</li>
+<li><p>在弹出的窗口中，使用默认配置即可。单击 <strong>下一步</strong>。 </p>
+</li>
+<li><p>在弹出的窗口中，填写规则名称。单击 <strong>完成</strong>。</p>
+</li>
+<li><p>查看 <strong>Windows 防火墙属性</strong>，以确认防火墙是否启用。</p>
+</li>
+<li><p>如防火墙未启用，选择 <strong>启用（推荐）</strong>。</p>
+</li>
+</ol>
+<p><strong>提示</strong>：建议将 <strong>域配置文件</strong>、<strong>专用配置文件</strong>、<strong>公用配置文件</strong> 选项卡下的防火墙全部启用。</p>
+<h2 id="6-客户端测试访问FTP站点"><a href="#6-客户端测试访问FTP站点" class="headerlink" title="6. 客户端测试访问FTP站点"></a>6. 客户端测试访问FTP站点</h2><p>Windows的文件夹目录、命令行工具、浏览器或者是第三方FTP连接工具均可用来测试FTP服务器。本示例中，将以本地Windows主机作为客户端，通过文件夹目录测试访问FTP站点。</p>
+<ol>
+<li><p>在本地物理主机中，打开文件夹目录，在文件夹路径中，输入<code>ftp://FTP站点的公网IP地址:21</code>进行访问。</p>
+</li>
+<li><p>在弹出的<strong>登录身份</strong>对话框，完成登录信息设置，然后单击<strong>登录</strong>。本示例中，使用<code>ftptest</code>用户名及对应的密码信息，登录FTP站点。</p>
+</li>
+<li><p>成功访问FTP站点对应的共享文件夹ftp后，您可以新建一个测试文件夹test。 </p>
+</li>
+<li><p>之后您可以重新登录Windows实例，查看C盘的ftp文件夹中新增了test文件夹，表示FTP站点搭建成功且可以进行文件数据传输。</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>运维</category>
+      </categories>
+  </entry>
+  <entry>
     <title>推荐几款免费且不限流量的全球 CDN</title>
-    <url>/river-blog/2023/02/07/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/</url>
+    <url>/river-blog/2022/12/19/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/</url>
     <content><![CDATA[<p>推荐几个免费的且不限流量的 CDN，包括<code>jsDelivr</code> <code>Statically</code> <code>GitHack</code> 全球通用，可以存储些网站的静态资源，然后引用 CDN 地址，优化网站的访问速度。</p>
 <span id="more"></span>
 

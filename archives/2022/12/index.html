@@ -180,7 +180,7 @@
       <main class="main" id="pjax-container">
         <!-- 头部导航 -->
         
-<header class="header   " 
+<header class="header  " 
   id="navHeader"
   style="position: fixed;
   left: 0; top: 0; z-index: 10;width: 100%;"
@@ -474,7 +474,7 @@
         <!-- 内容区域 -->
         <div class="bg-dark-floor" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -2;"></div>
 <div class="bg-light-floor-archive" style="position: fixed;left: 0;top: 0;width: 100%;height: 100%;z-index: -3;"></div>
-<div class="archive-header" style="background-image:url('/river-blog/')">
+<div class="archive-header" style="background-image:url('/river-blog/medias/archive.jpg')">
   <div class="archive-header-title">
     archive
   </div>
@@ -552,9 +552,26 @@
           <li class="post-item" data-aos="fade-left">
             
             <div class="post-img-box">
+              <a href="/river-blog/2022/12/19/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/" class="post-img " style="background-size: cover; 
+                background-position: center center;">
+                <img class="lazyload lazyload placeholder" src="https://pic2.zhimg.com/80/v2-e22aaad20d20634f506f57fff0fcbc17_1440w.webp" class="lazyload placeholder" data-srcset="https://pic2.zhimg.com/80/v2-e22aaad20d20634f506f57fff0fcbc17_1440w.webp" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+              </a>
+            </div>
+            <div class="post-date-title">
+              <div>
+                <span class="post-date">12-19</span>
+              </div>
+              <a class="post-title" href="/river-blog/2022/12/19/%E6%8E%A8%E8%8D%90%E5%87%A0%E6%AC%BE%E5%85%8D%E8%B4%B9%E4%B8%94%E4%B8%8D%E9%99%90%E6%B5%81%E9%87%8F%E7%9A%84%E5%85%A8%E7%90%83CDN/">推荐几款免费且不限流量的全球 CDN</a>
+            </div>
+          </li>
+        
+          
+          <li class="post-item" data-aos="fade-left">
+            
+            <div class="post-img-box">
               <a href="/river-blog/2022/12/06/Java%E6%97%A5%E5%B8%B8%E5%BC%80%E5%8F%91%E7%9A%8421%E4%B8%AA%E5%9D%91/" class="post-img " style="background-size: cover; 
                 background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/river-blog/medias/4.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/4.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+                <img class="lazyload lazyload placeholder" src="https://pic3.zhimg.com/v2-a5267dfbf175991d4b3a69b41f3f678a_b.jpg" class="lazyload placeholder" data-srcset="https://pic3.zhimg.com/v2-a5267dfbf175991d4b3a69b41f3f678a_b.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
               </a>
             </div>
             <div class="post-date-title">
@@ -571,7 +588,7 @@
             <div class="post-img-box">
               <a href="/river-blog/2022/12/06/hello-world/" class="post-img " style="background-size: cover; 
                 background-position: center center;">
-                <img class="lazyload lazyload placeholder" src="/river-blog/medias/7.jpg" class="lazyload placeholder" data-srcset="/river-blog/medias/7.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
+                <img class="lazyload lazyload placeholder" src="https://pic3.zhimg.com/v2-a5267dfbf175991d4b3a69b41f3f678a_b.jpg" class="lazyload placeholder" data-srcset="https://pic3.zhimg.com/v2-a5267dfbf175991d4b3a69b41f3f678a_b.jpg" srcset="https://pic1.zhimg.com/v2-cd38920285d125be80b3eb504052c550_b.webp" alt="">
               </a>
             </div>
             <div class="post-date-title">
@@ -615,7 +632,7 @@
       if (isDark) {
         this.FISH_COLOR = '#222'; // 暗黑色，有时间把这整成一个变量
       } else {
-        this.FISH_COLOR = '' || '#42b983';
+        this.FISH_COLOR = '' || 'rgba(66, 185, 133, 0.8)';
       }
     },
     setParameters: function () {
@@ -1084,8 +1101,6 @@
 <!-- 设置导航背景 -->
 <script>
   let setHeaderClass = () => {
-    const headerMenuTransparent = true;
-    if (!headerMenuTransparent) { return; }
     const nav = $('#navHeader');
     const navTop = nav.outerHeight();
     const winTop = $(window).scrollTop();
